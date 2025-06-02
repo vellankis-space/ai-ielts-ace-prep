@@ -375,19 +375,23 @@ const ModuleDetail = () => {
                       {test.duration}
                     </div>
                     <p className="text-sm text-gray-600 mb-4">{test.description}</p>
-                    <Button className="w-full" size="sm">
-                      Start This Test
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                    <Link to={`/modules/${module}/test`}>
+                      <Button className="w-full" size="sm">
+                        Start This Test
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
                   </div>
                 ))}
                 
                 {/* Quick Start Button */}
                 <div className="pt-4 border-t border-gray-200">
-                  <Button className="w-full" size="lg">
-                    Quick Start - {currentModule.name} Test
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  <Link to={`/modules/${module}/test`}>
+                    <Button className="w-full" size="lg">
+                      Quick Start - {currentModule.name} Test
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>

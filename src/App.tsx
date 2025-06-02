@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ModuleSelection from "./pages/ModuleSelection";
 import ModuleDetail from "./pages/ModuleDetail";
+import TestInterface from "./pages/TestInterface";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/modules" element={<ModuleSelection />} />
           <Route path="/modules/:module" element={<ModuleDetail />} />
+          <Route path="/modules/:module/test" element={<TestInterface />} />
           <Route path="/pricing" element={<ModuleSelection />} />
           <Route path="/blog" element={<ModuleSelection />} />
           <Route path="/login" element={<ModuleSelection />} />
