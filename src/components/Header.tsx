@@ -1,11 +1,15 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown, User, BookOpen, Headphones, PenTool, Mic, FileText } from 'lucide-react';
+import { Menu, X, ChevronDown, User, BookOpen, Headphones, PenTool, Mic, FileText, LogOut } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModulesOpen, setIsModulesOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const modules = [
     { name: 'Listening', icon: Headphones, path: '/modules/listening' },
@@ -15,6 +19,11 @@ const Header = () => {
     { name: 'Full Mock Test', icon: FileText, path: '/mock-test' },
     { name: 'Diagnostic Test', icon: User, path: '/diagnostic' }
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsUserMenuOpen(false);
+  };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
@@ -69,17 +78,57 @@ const Header = () => {
             </Link>
           </nav>
 
-          {/* Auth Buttons */}
+          {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/login" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Login
-            </Link>
-            <Link 
-              to="/signup" 
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Sign Up
-            </Link>
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-teal-500 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm font-medium">
+                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  </span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+
+                {/* User Dropdown */}
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      <span>Profile</span>
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors w-full text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link to="/auth" className="text-gray-700 hover:text-blue-600 transition-colors">
+                  Login
+                </Link>
+                <Link 
+                  to="/auth" 
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -117,15 +166,41 @@ const Header = () => {
             </Link>
             
             <div className="border-t border-gray-100 pt-4 space-y-2">
-              <Link to="/login" className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
-                Login
-              </Link>
-              <Link 
-                to="/signup" 
-                className="block mx-3 py-2 px-4 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Sign Up
-              </Link>
+              {user ? (
+                <>
+                  <div className="px-3 py-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-teal-500 rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">
+                        {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                      </span>
+                    </div>
+                  </div>
+                  <Link to="/profile" className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full text-left px-3 py-2 text-red-600 hover:text-red-700 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth" className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+                    Login
+                  </Link>
+                  <Link 
+                    to="/auth" 
+                    className="block mx-3 py-2 px-4 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
