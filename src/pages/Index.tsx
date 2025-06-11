@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
@@ -73,23 +72,37 @@ const Index = () => {
     {
       name: "Sarah Chen",
       designation: "Software Engineer",
-      src: "/placeholder.svg?height=400&width=400",
+      src: "/lovable-uploads/ed62ef41-93b5-4eaa-b357-37abef1fe644.png",
       score: "8.5",
       quote: "IELTS AI helped me improve from 6.5 to 8.5 in just 3 months. The AI feedback was incredibly detailed and actionable. I couldn't believe how much my writing and speaking improved with their personalized suggestions."
     },
     {
       name: "Mohammed Al-Rashid",
       designation: "Medical Student",
-      src: "/placeholder.svg?height=400&width=400",
+      src: "/lovable-uploads/1be0c8d4-9452-4154-b2ee-b8a534d44ed4.png",
       score: "7.5",
       quote: "The Speaking module practice was a game-changer. I gained so much confidence before my actual test. The pronunciation feedback helped me identify and fix issues I never knew I had."
     },
     {
       name: "Elena Kowalski",
       designation: "Business Analyst",
-      src: "/placeholder.svg?height=400&width=400",
+      src: "/lovable-uploads/85b711da-06c3-4571-9411-1d32b4f33cec.png",
       score: "8.0",
       quote: "The personalized study plan kept me focused on my weak areas. Highly recommend for serious IELTS preparation. The adaptive learning really made a difference in my final score."
+    },
+    {
+      name: "James Mitchell",
+      designation: "Marketing Manager",
+      src: "/lovable-uploads/122b1b5d-785d-4ce4-b803-9aff2c761893.png",
+      score: "7.0",
+      quote: "The mock tests were incredibly realistic and helped me understand exactly what to expect. The detailed feedback on my writing tasks was particularly helpful for improving my band score."
+    },
+    {
+      name: "Raj Patel",
+      designation: "Data Analyst",
+      src: "/lovable-uploads/2d82cedf-c3aa-4345-b1bb-70df73de414d.png",
+      score: "8.0",
+      quote: "I was struggling with the listening section, but the AI-powered practice sessions helped me improve significantly. The variety of accents and topics prepared me well for the actual test."
     }
   ];
 
