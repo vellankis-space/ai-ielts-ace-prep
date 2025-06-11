@@ -2,6 +2,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
+import { AnimatedTestimonials } from '../components/AnimatedTestimonials';
 import { 
   Star, 
   Users, 
@@ -71,21 +72,24 @@ const Index = () => {
   const testimonials = [
     {
       name: "Sarah Chen",
-      image: "/placeholder.svg?height=80&width=80",
+      designation: "Software Engineer",
+      src: "/placeholder.svg?height=400&width=400",
       score: "8.5",
-      quote: "IELTS AI helped me improve from 6.5 to 8.5 in just 3 months. The AI feedback was incredibly detailed and actionable."
+      quote: "IELTS AI helped me improve from 6.5 to 8.5 in just 3 months. The AI feedback was incredibly detailed and actionable. I couldn't believe how much my writing and speaking improved with their personalized suggestions."
     },
     {
       name: "Mohammed Al-Rashid",
-      image: "/placeholder.svg?height=80&width=80",
+      designation: "Medical Student",
+      src: "/placeholder.svg?height=400&width=400",
       score: "7.5",
-      quote: "The Speaking module practice was a game-changer. I gained so much confidence before my actual test."
+      quote: "The Speaking module practice was a game-changer. I gained so much confidence before my actual test. The pronunciation feedback helped me identify and fix issues I never knew I had."
     },
     {
       name: "Elena Kowalski",
-      image: "/placeholder.svg?height=80&width=80",
+      designation: "Business Analyst",
+      src: "/placeholder.svg?height=400&width=400",
       score: "8.0",
-      quote: "The personalized study plan kept me focused on my weak areas. Highly recommend for serious IELTS preparation."
+      quote: "The personalized study plan kept me focused on my weak areas. Highly recommend for serious IELTS preparation. The adaptive learning really made a difference in my final score."
     }
   ];
 
@@ -260,7 +264,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Animated Testimonials Section */}
       <section className="py-20 bg-gradient-to-r from-blue-50 to-teal-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -272,32 +276,11 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center mb-4">
-                  <img 
-                    src={testimonial.image} 
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full mr-4"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-sm text-gray-600">Achieved</span>
-                      <span className="text-lg font-bold text-blue-600">{testimonial.score}</span>
-                      <div className="flex space-x-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600 italic">"{testimonial.quote}"</p>
-              </div>
-            ))}
-          </div>
+          <AnimatedTestimonials 
+            testimonials={testimonials} 
+            autoplay={true}
+            className="max-w-6xl"
+          />
         </div>
       </section>
 
