@@ -43,39 +43,78 @@ export const AnimatedTestimonials: React.FC<AnimatedTestimonialsProps> = ({
     }
   }, [autoplay]);
 
-  const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
+  const getCardStyle = (index: number) => {
+    const isCurrentActive = isActive(index);
+    const diff = index - active;
+    const totalCards = testimonials.length;
+    
+    // Normalize the difference to handle wrapping
+    const normalizedDiff = diff > totalCards / 2 ? diff - totalCards : diff < -totalCards / 2 ? diff + totalCards : diff;
+    
+    if (isCurrentActive) {
+      return {
+        transform: 'rotateY(0deg) translateZ(0px) translateX(0px)',
+        zIndex: 999,
+        opacity: 1,
+        scale: 1
+      };
+    } else if (normalizedDiff === 1 || normalizedDiff === -totalCards + 1) {
+      // Next card (right side)
+      return {
+        transform: 'rotateY(-15deg) translateZ(-80px) translateX(20px)',
+        zIndex: totalCards - Math.abs(normalizedDiff),
+        opacity: 0.7,
+        scale: 0.95
+      };
+    } else if (normalizedDiff === -1 || normalizedDiff === totalCards - 1) {
+      // Previous card (left side)
+      return {
+        transform: 'rotateY(15deg) translateZ(-80px) translateX(-20px)',
+        zIndex: totalCards - Math.abs(normalizedDiff),
+        opacity: 0.7,
+        scale: 0.95
+      };
+    } else {
+      // Cards further away
+      return {
+        transform: `rotateY(${normalizedDiff > 0 ? -25 : 25}deg) translateZ(-120px) translateX(${normalizedDiff > 0 ? 40 : -40}px)`,
+        zIndex: totalCards - Math.abs(normalizedDiff),
+        opacity: 0.4,
+        scale: 0.9
+      };
+    }
   };
 
   return (
     <div className={cn("max-w-sm md:max-w-5xl mx-auto px-4 md:px-8 lg:px-12 py-20", className)}>
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
         <div>
-          <div className="relative h-96 md:h-[500px] w-full">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={testimonial.src}
-                className={cn(
-                  "absolute inset-0 origin-bottom transition-all duration-400 ease-in-out",
-                  isActive(index) 
-                    ? "opacity-100 scale-100 z-50" 
-                    : "opacity-70 scale-95 z-10"
-                )}
-                style={{
-                  transform: isActive(index) 
-                    ? 'rotateY(0deg) translateZ(0px)' 
-                    : `rotateY(${randomRotateY()}deg) translateZ(-100px)`,
-                  zIndex: isActive(index) ? 999 : testimonials.length + 2 - index,
-                }}
-              >
-                <img
-                  src={testimonial.src}
-                  alt={testimonial.name}
-                  className="h-full w-full rounded-3xl object-cover object-center shadow-2xl"
-                  draggable={false}
-                />
-              </div>
-            ))}
+          <div className="relative h-96 md:h-[500px] w-full perspective-1000">
+            {testimonials.map((testimonial, index) => {
+              const cardStyle = getCardStyle(index);
+              return (
+                <div
+                  key={testimonial.src}
+                  className="absolute inset-0 origin-bottom transition-all duration-500 ease-in-out"
+                  style={{
+                    transform: cardStyle.transform,
+                    zIndex: cardStyle.zIndex,
+                    opacity: cardStyle.opacity,
+                  }}
+                >
+                  <img
+                    src={testimonial.src}
+                    alt={testimonial.name}
+                    className="h-full w-full rounded-3xl object-cover object-center shadow-2xl"
+                    draggable={false}
+                    style={{
+                      transform: `scale(${cardStyle.scale})`,
+                      transition: 'transform 0.5s ease-in-out'
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="flex justify-between flex-col py-4">
