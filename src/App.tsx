@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import ModuleSelection from "./pages/ModuleSelection";
 import ModuleDetail from "./pages/ModuleDetail";
 import TestInterface from "./pages/TestInterface";
+import TestResults from "./pages/TestResults";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 
@@ -31,6 +32,11 @@ const App = () => (
             <Route path="/modules/:module/test" element={
               <ProtectedRoute>
                 <TestInterface />
+              </ProtectedRoute>
+            } />
+            <Route path="/modules/:module/results" element={
+              <ProtectedRoute>
+                <TestResults />
               </ProtectedRoute>
             } />
             <Route path="/profile" element={
