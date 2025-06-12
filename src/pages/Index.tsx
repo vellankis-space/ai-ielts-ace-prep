@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
 import { AnimatedTestimonials } from '../components/AnimatedTestimonials';
+import { useAuth } from '@/hooks/useAuth';
 import { 
   Star, 
   Users, 
@@ -14,10 +15,13 @@ import {
   ArrowRight, 
   Play,
   CheckCircle,
-  TrendingUp
+  TrendingUp,
+  BarChart3
 } from 'lucide-react';
 
 const Index = () => {
+  const { user } = useAuth();
+
   const features = [
     {
       icon: Brain,
@@ -132,24 +136,45 @@ const Index = () => {
                 Join thousands of successful IELTS candidates who achieved their target bands.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link
-                  to="/diagnostic"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  Start Your Free Diagnosis
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-                <button className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 text-lg font-semibold rounded-xl border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200">
-                  <Play className="mr-2 w-5 h-5" />
-                  Watch Demo
-                </button>
+                {user ? (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      <BarChart3 className="mr-2 w-5 h-5" />
+                      Go to Dashboard
+                    </Link>
+                    <Link
+                      to="/modules"
+                      className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 text-lg font-semibold rounded-xl border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200"
+                    >
+                      <BookOpen className="mr-2 w-5 h-5" />
+                      Browse Modules
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/diagnostic"
+                      className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      Start Your Free Diagnosis
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Link>
+                    <button className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 text-lg font-semibold rounded-xl border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200">
+                      <Play className="mr-2 w-5 h-5" />
+                      Watch Demo
+                    </button>
+                  </>
+                )}
               </div>
               
               {/* Trust indicators */}
               <div className="mt-8 flex items-center justify-center lg:justify-start space-x-6 text-sm text-gray-500">
                 <div className="flex items-center">
                   <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
-                  No Credit Card Required
+                  {user ? 'Personalized Learning' : 'No Credit Card Required'}
                 </div>
                 <div className="flex items-center">
                   <CheckCircle className="w-4 h-4 text-green-500 mr-1" />

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown, User, BookOpen, Headphones, PenTool, Mic, FileText, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, User, BookOpen, Headphones, PenTool, Mic, FileText, LogOut, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 
@@ -39,6 +39,12 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            {user && (
+              <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Dashboard
+              </Link>
+            )}
+            
             <div className="relative">
               <button
                 onMouseEnter={() => setIsModulesOpen(true)}
@@ -99,6 +105,14 @@ const Header = () => {
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2">
                     <Link
+                      to="/dashboard"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <BarChart3 className="w-4 h-4" />
+                      <span>Dashboard</span>
+                    </Link>
+                    <Link
                       to="/profile"
                       className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       onClick={() => setIsUserMenuOpen(false)}
@@ -143,6 +157,12 @@ const Header = () => {
         {/* Mobile Menu */}
         <div className={`md:hidden transition-all duration-300 ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
           <div className="py-4 space-y-2">
+            {user && (
+              <Link to="/dashboard" className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Dashboard
+              </Link>
+            )}
+            
             <div className="space-y-2">
               <div className="font-medium text-gray-900 px-3 py-2">Modules</div>
               {modules.map((module) => (
@@ -178,6 +198,9 @@ const Header = () => {
                       </span>
                     </div>
                   </div>
+                  <Link to="/dashboard" className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+                    Dashboard
+                  </Link>
                   <Link to="/profile" className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
                     Profile
                   </Link>
