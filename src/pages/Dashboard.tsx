@@ -34,35 +34,35 @@ const Dashboard = () => {
         date: '2025-06-10',
         module: 'Writing - Task 2',
         score: 6.0,
-        type: 'practice'
+        type: 'practice' as const
       },
       {
         id: 2,
         date: '2025-06-08',
         module: 'Listening - Full Test',
         score: 7.5,
-        type: 'mock'
+        type: 'mock' as const
       },
       {
         id: 3,
         date: '2025-06-05',
         module: 'Reading - Academic',
         score: 6.5,
-        type: 'practice'
+        type: 'practice' as const
       },
       {
         id: 4,
         date: '2025-06-03',
         module: 'Speaking - Part 2',
         score: 6.0,
-        type: 'practice'
+        type: 'practice' as const
       },
       {
         id: 5,
         date: '2025-06-01',
         module: 'Full Mock Test',
         score: 6.2,
-        type: 'mock'
+        type: 'mock' as const
       }
     ],
     strengths: ['Listening comprehension', 'Vocabulary range', 'Pronunciation'],
