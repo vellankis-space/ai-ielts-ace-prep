@@ -24,13 +24,35 @@ import {
   Volume2
 } from 'lucide-react';
 
+// Define interfaces for better type safety
+interface Subscores {
+  [key: string]: number;
+}
+
+interface Section {
+  name: string;
+  score: number;
+  questions?: number;
+  correct?: number;
+  subscores?: Subscores;
+}
+
+interface ModuleResults {
+  overallScore: number;
+  totalQuestions?: number;
+  correctAnswers?: number;
+  sections: Section[];
+  strengths: string[];
+  weaknesses: string[];
+}
+
 const TestResults = () => {
   const { module } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Mock test results data
-  const testResults = {
+  // Mock test results data with proper typing
+  const testResults: Record<string, ModuleResults> = {
     listening: {
       overallScore: 6.5,
       totalQuestions: 40,
@@ -154,8 +176,8 @@ const TestResults = () => {
     }
   };
 
-  const currentResults = testResults[module as keyof typeof testResults];
-  const moduleNames = {
+  const currentResults = testResults[module as string];
+  const moduleNames: Record<string, string> = {
     listening: 'Listening',
     reading: 'Reading',
     writing: 'Writing',
@@ -179,6 +201,10 @@ const TestResults = () => {
     if (score >= 6.0) return 'Competent User - Effective operational command';
     if (score >= 5.0) return 'Modest User - Partial operational command';
     return 'Limited User - Basic operational command';
+  };
+
+  const formatSubscoreKey = (key: string): string => {
+    return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   };
 
   const recommendations = [
@@ -222,7 +248,7 @@ const TestResults = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[
           { label: 'Modules', path: '/modules' },
-          { label: moduleNames[module as keyof typeof moduleNames], path: `/modules/${module}` },
+          { label: moduleNames[module as string] || 'Module', path: `/modules/${module}` },
           { label: 'Test Results' }
         ]} />
 
@@ -230,7 +256,7 @@ const TestResults = () => {
         <div className="mb-8">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {moduleNames[module as keyof typeof moduleNames]} Test Results
+              {moduleNames[module as string] || 'Module'} Test Results
             </h1>
             <p className="text-gray-600">
               Great effort! Here's your detailed performance analysis
@@ -281,7 +307,7 @@ const TestResults = () => {
                     <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
                         <h4 className="font-medium">{section.name}</h4>
-                        {'correct' in section && (
+                        {section.correct && section.questions && (
                           <p className="text-sm text-gray-600">
                             {section.correct}/{section.questions} correct
                           </p>
@@ -291,11 +317,11 @@ const TestResults = () => {
                         <div className={`text-xl font-bold ${getScoreColor(section.score)}`}>
                           {section.score}
                         </div>
-                        {'subscores' in section && (
+                        {section.subscores && (
                           <div className="text-xs text-gray-500 space-y-1">
                             {Object.entries(section.subscores).map(([key, value]) => (
                               <div key={key}>
-                                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: {value}
+                                {formatSubscoreKey(key)}: {value}
                               </div>
                             ))}
                           </div>
