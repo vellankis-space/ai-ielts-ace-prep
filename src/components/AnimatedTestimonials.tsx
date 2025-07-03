@@ -86,10 +86,10 @@ export const AnimatedTestimonials: React.FC<AnimatedTestimonialsProps> = ({
   };
 
   return (
-    <div className={cn("max-w-sm md:max-w-5xl mx-auto px-4 md:px-8 lg:px-12 py-20", className)}>
+    <div className={cn("max-w-sm md:max-w-5xl mx-auto px-4 md:px-8 lg:px-12 py-12", className)}>
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
         <div>
-          <div className="relative h-96 md:h-[500px] w-full perspective-1000">
+          <div className="relative h-96 md:h-[500px] w-full perspective-1000 z-10">
             {testimonials.map((testimonial, index) => {
               const cardStyle = getCardStyle(index);
               return (

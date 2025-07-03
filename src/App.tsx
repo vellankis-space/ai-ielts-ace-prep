@@ -11,7 +11,8 @@ import ModuleSelection from "./pages/ModuleSelection";
 import ModuleDetail from "./pages/ModuleDetail";
 import TestInterface from "./pages/TestInterface";
 import TestResults from "./pages/TestResults";
-import Auth from "./pages/Auth";
+import AuthLayout from "./pages/AuthLayout";
+import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 
@@ -26,7 +27,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
+            
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
@@ -51,8 +52,10 @@ const App = () => (
             } />
             <Route path="/pricing" element={<ModuleSelection />} />
             <Route path="/blog" element={<ModuleSelection />} />
-            <Route path="/login" element={<Auth />} />
-            <Route path="/signup" element={<Auth />} />
+            <Route path="/login" element={<AuthLayout />} />
+            <Route path="/signup" element={<AuthLayout />} />
+            <Route path="/forgot-password" element={<AuthLayout />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about" element={<ModuleSelection />} />
             <Route path="/contact" element={<ModuleSelection />} />
             <Route path="/faq" element={<ModuleSelection />} />
