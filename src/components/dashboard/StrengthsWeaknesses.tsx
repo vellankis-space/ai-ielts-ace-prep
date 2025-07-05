@@ -25,35 +25,31 @@ const StrengthsWeaknesses = ({ strengths, weaknesses, moduleAverages }: Strength
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="border-green-200 bg-green-50">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-green-100 rounded-full">
-                <TrendingUp className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-medium text-green-900">Strongest Skill</h3>
-                <p className="text-green-700">
-                  {capitalize(strongest[0])} ({strongest[1]} average)
-                </p>
-              </div>
+          <CardContent className="p-4 flex items-center space-x-3">
+            <div className="p-2 bg-green-100 rounded-full">
+              <TrendingUp className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <h3 className="font-medium text-green-900">Strongest Skill</h3>
+              <p className="text-green-700">
+                {capitalize(strongest[0])} ({strongest[1]} average)
+              </p>
             </div>
           </CardContent>
         </Card>
         
         <Card className="border-orange-200 bg-orange-50">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-orange-100 rounded-full">
-                <TrendingDown className="w-5 h-5 text-orange-600" />
-              </div>
-              <div>
-                <h3 className="font-medium text-orange-900">Improvement Area</h3>
-                <p className="text-orange-700">
-                  {capitalize(weakest[0])} ({weakest[1]} average)
-                </p>
-              </div>
+          <CardContent className="p-4 flex items-center space-x-3">
+            <div className="p-2 bg-orange-100 rounded-full">
+              <TrendingDown className="w-5 h-5 text-orange-600" />
+            </div>
+            <div>
+              <h3 className="font-medium text-orange-900">Improvement Area</h3>
+              <p className="text-orange-700">
+                {capitalize(weakest[0])} ({weakest[1]} average)
+              </p>
             </div>
           </CardContent>
         </Card>

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Breadcrumb from '@/components/Breadcrumb';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth-context';
 import WelcomeSection from '@/components/dashboard/WelcomeSection';
 import ProgressOverview from '@/components/dashboard/ProgressOverview';
 import TestHistory from '@/components/dashboard/TestHistory';

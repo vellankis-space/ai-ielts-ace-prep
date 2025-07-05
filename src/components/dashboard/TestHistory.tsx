@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -75,29 +76,17 @@ const TestHistory = ({ tests }: TestHistoryProps) => {
             <Calendar className="w-5 h-5 mr-2" />
             Recent Test History
           </CardTitle>
-          <div className="flex gap-2">
-            <Button
-              variant={filter === 'all' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setFilter('all')}
-            >
+          <ToggleGroup type="single" value={filter} onValueChange={(value: "all" | "practice" | "mock") => setFilter(value)}>
+            <ToggleGroupItem value="all" aria-label="Toggle all">
               All
-            </Button>
-            <Button
-              variant={filter === 'practice' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setFilter('practice')}
-            >
+            </ToggleGroupItem>
+            <ToggleGroupItem value="practice" aria-label="Toggle practice">
               Practice
-            </Button>
-            <Button
-              variant={filter === 'mock' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setFilter('mock')}
-            >
+            </ToggleGroupItem>
+            <ToggleGroupItem value="mock" aria-label="Toggle mock tests">
               Mock Tests
-            </Button>
-          </div>
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
       </CardHeader>
       <CardContent>

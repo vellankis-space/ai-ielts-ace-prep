@@ -32,15 +32,14 @@ const Achievements = ({ achievements }: AchievementsProps) => {
       <CardContent>
         <div className="grid grid-cols-2 gap-3">
           {achievements.map((achievement) => (
-            <div
+            <Card
               key={achievement.id}
-              className={`relative p-3 rounded-lg border-2 transition-all ${
-                achievement.unlocked
-                  ? 'border-green-200 bg-green-50 hover:bg-green-100'
-                  : 'border-gray-200 bg-gray-50 opacity-60'
+              className={`relative p-3 text-center ${achievement.unlocked
+                ? 'border-green-200 bg-green-50 hover:bg-green-100'
+                : 'border-gray-200 bg-gray-50 opacity-60'
               }`}
             >
-              <div className="text-center">
+              <CardContent className="p-0">
                 <div className="text-2xl mb-2 relative">
                   {achievement.unlocked ? (
                     achievement.icon
@@ -51,9 +50,8 @@ const Achievements = ({ achievements }: AchievementsProps) => {
                     </div>
                   )}
                 </div>
-                <h4 className={`text-xs font-medium ${
-                  achievement.unlocked ? 'text-gray-900' : 'text-gray-500'
-                }`}>
+                <h4 className={`text-xs font-medium ${achievement.unlocked ? 'text-gray-900' : 'text-gray-500'
+                  }`}>
                   {achievement.title}
                 </h4>
                 {achievement.unlocked && (
@@ -61,8 +59,8 @@ const Achievements = ({ achievements }: AchievementsProps) => {
                     Unlocked
                   </Badge>
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
         

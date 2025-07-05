@@ -4,26 +4,43 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, ArrowRight, Chrome } from 'lucide-react';
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email address." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+});
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
   const { toast } = useToast();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
       });
 
       if (signInError) {
@@ -68,110 +85,62 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <>
-      <CardHeader className="space-y-1 pb-4 bg-gray-50 rounded-t-lg">
-        <CardTitle className="text-2xl font-semibold text-center">
-          Welcome back
-        </CardTitle>
-        <CardDescription className="text-center">
-          Sign in to continue your IELTS preparation journey
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full py-3 text-sm font-medium"
-            onClick={handleGoogleSignIn}
-          >
-            <Chrome className="w-5 h-5 mr-2" />
-            Continue with Google
-          </Button>
-        </div>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">or continue with email</span>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email Address
-            </Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 py-3"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password
-            </Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 py-3"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="text-right text-sm">
-            <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
-              Forgot password?
-            </Link>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-700 hover:to-indigo-600 text-white font-medium"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="flex items-center">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                Signing in...
-              </div>
-            ) : (
-              <div className="flex items-center justify-center">
-                Sign In
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </div>
-            )}
-          </Button>
-        </form>
-
-        <div className="text-center pt-4 border-t border-gray-100">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-blue-600 hover:text-blue-500 font-medium">
-              Sign up
-            </Link>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
+        <div className="grid gap-2 text-center">
+          <h1 className="text-3xl font-bold text-blue-800">Login</h1>
+          <p className="text-balance text-gray-600">
+            Enter your email below to login to your account
           </p>
         </div>
-      </CardContent>
-    </>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="m@example.com" {...field} className="border-blue-300 focus:border-blue-500 focus:ring-blue-500" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center">
+                <FormLabel>Password</FormLabel>
+                <Link
+                  to="/forgot-password"
+                  className="ml-auto inline-block text-sm underline"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-teal-500 text-white hover:from-blue-700 hover:to-teal-600" disabled={isLoading}>
+          {isLoading ? 'Signing in...' : 'Login'}
+        </Button>
+        <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700" type="button" onClick={handleGoogleSignIn}>
+          Login with Google
+        </Button>
+        <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{" "}
+            <Link to="/signup" className="underline">
+              Sign up
+            </Link>
+          </div>
+      </form>
+    </Form>
   );
 };
 

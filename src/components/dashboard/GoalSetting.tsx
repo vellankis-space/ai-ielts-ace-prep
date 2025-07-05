@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Target, Award } from 'lucide-react';
 
 interface GoalSettingProps {
@@ -87,12 +88,12 @@ const GoalSetting = ({ currentBand, targetBand, setTargetBand }: GoalSettingProp
 
         {/* Motivational Message */}
         {remainingPoints > 0 && (
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm text-blue-800">
+          <Alert variant="default" className="bg-blue-50 border-blue-200 text-blue-800">
+            <AlertDescription>
               💪 You're {remainingPoints.toFixed(1)} points away from your goal! 
               Keep practicing and you'll get there.
-            </p>
-          </div>
+            </AlertDescription>
+          </Alert>
         )}
       </CardContent>
     </Card>

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '../components/Layout';
 import Breadcrumb from '../components/Breadcrumb';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   Headphones, 
   BookOpen, 
@@ -15,6 +15,24 @@ import {
 } from 'lucide-react';
 
 const ModuleSelection = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const params = new URLSearchParams(location.search);
+    const section = params.get('section');
+    if (section) {
+      const element = document.getElementById(section);
+      if (element) {
+        const headerOffset = 64; // Height of the fixed header
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [location.search]);
   const modules = [
     {
       id: 'listening',
@@ -73,10 +91,10 @@ const ModuleSelection = () => {
       id: 'diagnostic',
       name: 'Diagnostic Test',
       icon: Target,
-      description: 'Identify your strengths and weaknesses across all modules. Get personalized recommendations for your study plan.',
+      description: 'Identify your strengths and weaknesses across all modules. Get a personalized recommendations for your study plan.',
       duration: '1h 30min',
       difficulty: 'Adaptive',
-      path: '/diagnostic',
+      path: '/diagnostic-test',
       featured: false
     }
   ];
@@ -131,7 +149,7 @@ const ModuleSelection = () => {
         </div>
 
         {/* Full Tests Section */}
-        <div className="mb-12">
+        <div id="comprehensive-test" className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Comprehensive Tests
           </h2>
@@ -139,10 +157,10 @@ const ModuleSelection = () => {
             {additionalTests.map((test) => (
               <div
                 key={test.id}
-                className={`relative bg-white rounded-xl border-2 transition-all duration-300 hover:shadow-xl ${
+                className={`group relative bg-white rounded-xl border-2 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl group-hover:ring-2 group-hover:ring-blue-500 group-hover:ring-offset-2 ${
                   test.featured 
-                    ? 'border-blue-300 bg-gradient-to-br from-blue-50 to-white' 
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-blue-300 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-white' 
+                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                 }`}
               >
                 {test.featured && (
@@ -154,7 +172,7 @@ const ModuleSelection = () => {
                 )}
                 <div className="p-8">
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${
+                    <div className={`w-16 h-16 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
                       test.featured 
                         ? 'bg-gradient-to-r from-blue-500 to-teal-500' 
                         : 'bg-gradient-to-r from-gray-600 to-gray-700'
@@ -206,7 +224,7 @@ const ModuleSelection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/diagnostic"
+              to="/diagnostic-test"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
             >
               Take Diagnostic Test

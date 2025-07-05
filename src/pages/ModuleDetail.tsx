@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Breadcrumb from '../components/Breadcrumb';
@@ -25,6 +25,10 @@ const ModuleDetail = () => {
   const { module } = useParams();
   const [showTechnicalCheck, setShowTechnicalCheck] = useState(false);
   const [showTips, setShowTips] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [module]);
 
   // Module configuration
   const moduleConfig = {
@@ -135,16 +139,16 @@ const ModuleDetail = () => {
       hasTechnicalCheck: false,
       tests: [
         {
-          name: 'Academic Writing Practice',
-          difficulty: 'Intermediate',
-          duration: '60 minutes',
-          description: 'Task 1: Graph description, Task 2: Argumentative essay'
-        },
-        {
           name: 'General Training Writing',
           difficulty: 'Beginner',
           duration: '60 minutes',
           description: 'Task 1: Letter writing, Task 2: Opinion essay'
+        },
+        {
+          name: 'Academic Writing Practice',
+          difficulty: 'Intermediate',
+          duration: '60 minutes',
+          description: 'Task 1: Graph description, Task 2: Argumentative essay'
         },
         {
           name: 'Advanced Writing Challenge',
@@ -375,7 +379,7 @@ const ModuleDetail = () => {
                       {test.duration}
                     </div>
                     <p className="text-sm text-gray-600 mb-4">{test.description}</p>
-                    <Link to={`/modules/${module}/test`}>
+                    <Link to={module === 'writing' && test.name === 'General Training Writing' ? '/modules/writing/general-training' : module === 'writing' && test.name === 'Academic Writing Practice' ? '/modules/writing/academic-practice' : module === 'writing' && test.name === 'Advanced Writing Challenge' ? '/modules/writing/advanced-challenge' : `/modules/${module}/test`}>
                       <Button className="w-full" size="sm">
                         Start This Test
                         <ArrowRight className="w-4 h-4 ml-2" />
@@ -384,15 +388,7 @@ const ModuleDetail = () => {
                   </div>
                 ))}
                 
-                {/* Quick Start Button */}
-                <div className="pt-4 border-t border-gray-200">
-                  <Link to={`/modules/${module}/test`}>
-                    <Button className="w-full" size="lg">
-                      Quick Start - {currentModule.name} Test
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
-                </div>
+                
               </CardContent>
             </Card>
           </div>

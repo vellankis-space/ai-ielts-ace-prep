@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   BookOpen, 
@@ -64,14 +64,14 @@ const QuickAccess = () => {
   return (
     <Card>
       <CardContent className="p-8">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
             Ready to Continue Learning?
-          </h2>
+          </CardTitle>
           <p className="text-gray-600">
             Choose your next practice session or take a full mock test
           </p>
-        </div>
+        </CardHeader>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {quickActions.map((action, index) => (

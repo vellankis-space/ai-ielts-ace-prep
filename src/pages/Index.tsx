@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
 import { AnimatedTestimonials } from '../components/AnimatedTestimonials';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth-context';
 import { 
   Star, 
   Users, 
@@ -156,7 +156,7 @@ const Index = () => {
                 ) : (
                   <>
                     <Link
-                      to="/diagnostic"
+                      to="/diagnostic-test"
                       className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
                     >
                       Start Your Free Diagnosis
@@ -293,7 +293,7 @@ const Index = () => {
           <div className="text-center mt-12">
             <Link
               to="/modules"
-              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 hover:shadow-lg transition-colors"
             >
               View All Modules
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -333,7 +333,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/diagnostic"
+              to="/diagnostic-test"
               className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 text-lg font-semibold rounded-xl hover:bg-gray-50 transition-colors"
             >
               Start Free Diagnostic Test

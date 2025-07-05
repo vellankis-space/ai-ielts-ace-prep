@@ -56,7 +56,7 @@ const ResetPassword = () => {
           description: "You can now sign in with your new password.",
         });
         await supabase.auth.signOut(); // Sign out the user after password reset
-        setTimeout(() => navigate('/auth'), 3000);
+        setTimeout(() => navigate('/login'), 3000);
       }
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");

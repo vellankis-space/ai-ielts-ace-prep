@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { BookOpen, ArrowRight, Target, TrendingUp } from 'lucide-react';
 
 interface StudyPlanProps {
@@ -21,30 +22,34 @@ const StudyPlan = ({ recommendations }: StudyPlanProps) => {
         </p>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <Accordion type="single" collapsible className="w-full">
           {recommendations.map((recommendation, index) => (
-            <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
-              <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
-                {index + 1}
-              </div>
-              <div className="flex-grow">
-                <p className="text-gray-900 font-medium">{recommendation}</p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-blue-600 mt-1" />
-            </div>
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="no-underline hover:no-underline">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                    {index + 1}
+                  </div>
+                  <p className="text-gray-900 font-medium text-left">{recommendation}</p>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <p className="text-gray-700 pl-9">Details about this recommendation...</p>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-          
-          <div className="pt-4 border-t border-gray-200">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button className="flex-1">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Start Next Practice Test
-              </Button>
-              <Button variant="outline" className="flex-1">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Review Weakest Area
-              </Button>
-            </div>
+        </Accordion>
+        
+        <div className="pt-4 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button className="flex-1">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Start Next Practice Test
+            </Button>
+            <Button variant="outline" className="flex-1">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Review Weakest Area
+            </Button>
           </div>
         </div>
       </CardContent>

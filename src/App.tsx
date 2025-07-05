@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
@@ -11,10 +12,25 @@ import ModuleSelection from "./pages/ModuleSelection";
 import ModuleDetail from "./pages/ModuleDetail";
 import TestInterface from "./pages/TestInterface";
 import TestResults from "./pages/TestResults";
-import AuthLayout from "./pages/AuthLayout";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import ComingSoonPage from "./pages/ComingSoonPage";
+import MockTestPage from "./pages/MockTestPage";
+import DiagnosticTestPage from "./pages/DiagnosticTestPage";
+import AboutUsPage from "./pages/AboutUsPage";
+import ContactPage from "./pages/ContactPage";
+import FaqPage from "./pages/FaqPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import CookiePolicyPage from "./pages/CookiePolicyPage";
+import GeneralTrainingWritingPage from "./pages/GeneralTrainingWritingPage";
+import AcademicWritingPracticePage from "./pages/AcademicWritingPracticePage";
+import AdvancedWritingChallengePage from "./pages/AdvancedWritingChallengePage";
+import WritingResultsPage from "./pages/WritingResultsPage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +41,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             
@@ -35,6 +52,10 @@ const App = () => (
             } />
             <Route path="/modules" element={<ModuleSelection />} />
             <Route path="/modules/:module" element={<ModuleDetail />} />
+            <Route path="/modules/writing/general-training" element={<GeneralTrainingWritingPage />} />
+            <Route path="/modules/writing/academic-practice" element={<AcademicWritingPracticePage />} />
+            <Route path="/modules/writing/advanced-challenge" element={<AdvancedWritingChallengePage />} />
+            <Route path="/modules/writing/results" element={<WritingResultsPage />} />
             <Route path="/modules/:module/test" element={
               <ProtectedRoute>
                 <TestInterface />
@@ -50,19 +71,20 @@ const App = () => (
                 <Profile />
               </ProtectedRoute>
             } />
-            <Route path="/pricing" element={<ModuleSelection />} />
-            <Route path="/blog" element={<ModuleSelection />} />
-            <Route path="/login" element={<AuthLayout />} />
-            <Route path="/signup" element={<AuthLayout />} />
-            <Route path="/forgot-password" element={<AuthLayout />} />
+            <Route path="/pricing" element={<ComingSoonPage />} />
+            <Route path="/blog" element={<ComingSoonPage />} />
+            <Route path="/mock-test" element={<MockTestPage />} />
+            <Route path="/diagnostic-test" element={<DiagnosticTestPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/about" element={<ModuleSelection />} />
-            <Route path="/contact" element={<ModuleSelection />} />
-            <Route path="/faq" element={<ModuleSelection />} />
-            <Route path="/terms" element={<ModuleSelection />} />
-            <Route path="/privacy" element={<ModuleSelection />} />
-            <Route path="/diagnostic" element={<ModuleSelection />} />
-            <Route path="/mock-test" element={<ModuleSelection />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/cookie-policy" element={<CookiePolicyPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

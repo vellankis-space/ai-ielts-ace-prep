@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { User } from '@supabase/supabase-js';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
-import { Calendar, TrendingUp, Target } from 'lucide-react';
+import { Calendar, TrendingUp, Target, User } from 'lucide-react';
 
 interface WelcomeSectionProps {
-  user: User;
+  user: SupabaseUser;
   userData: {
     currentBand: number;
     testsThisWeek: number;
@@ -24,8 +24,8 @@ const WelcomeSection = ({ user, userData }: WelcomeSectionProps) => {
           <div className="flex items-center space-x-4 mb-6 md:mb-0">
             <Avatar className="w-16 h-16 border-2 border-white/20">
               <AvatarImage src={user.user_metadata?.avatar_url} />
-              <AvatarFallback className="bg-white/20 text-white text-xl font-semibold">
-                {userName.charAt(0).toUpperCase()}
+              <AvatarFallback className="bg-white/20 text-white text-xl font-semibold flex items-center justify-center">
+                <User className="w-8 h-8" />
               </AvatarFallback>
             </Avatar>
             <div>
@@ -39,27 +39,33 @@ const WelcomeSection = ({ user, userData }: WelcomeSectionProps) => {
           </div>
           
           <div className="grid grid-cols-3 gap-6 text-center">
-            <div className="bg-white/10 rounded-lg p-4">
-              <div className="flex items-center justify-center mb-2">
-                <Target className="w-5 h-5 mr-2" />
-                <span className="text-sm font-medium">Current Band</span>
-              </div>
-              <div className="text-2xl font-bold">{userData.currentBand}</div>
-            </div>
-            <div className="bg-white/10 rounded-lg p-4">
-              <div className="flex items-center justify-center mb-2">
-                <Calendar className="w-5 h-5 mr-2" />
-                <span className="text-sm font-medium">This Week</span>
-              </div>
-              <div className="text-2xl font-bold">{userData.testsThisWeek}</div>
-            </div>
-            <div className="bg-white/10 rounded-lg p-4">
-              <div className="flex items-center justify-center mb-2">
-                <TrendingUp className="w-5 h-5 mr-2" />
-                <span className="text-sm font-medium">Study Streak</span>
-              </div>
-              <div className="text-2xl font-bold">{userData.studyStreak} days</div>
-            </div>
+            <Card className="bg-white/10 text-white border-0">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <Target className="w-5 h-5 mr-2" />
+                  <span className="text-sm font-medium">Current Band</span>
+                </div>
+                <div className="text-2xl font-bold">{userData.currentBand}</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/10 text-white border-0">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  <span className="text-sm font-medium">Tests This Week</span>
+                </div>
+                <div className="text-2xl font-bold">{userData.testsThisWeek}</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/10 text-white border-0">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <TrendingUp className="w-5 h-5 mr-2" />
+                  <span className="text-sm font-medium">Study Streak</span>
+                </div>
+                <div className="text-2xl font-bold">{userData.studyStreak} days</div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </CardContent>

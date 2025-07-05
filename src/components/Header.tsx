@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ChevronDown, User, BookOpen, Headphones, PenTool, Mic, FileText, LogOut, BarChart3 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth-context';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -17,7 +17,7 @@ const Header = () => {
     { name: 'Writing', icon: PenTool, path: '/modules/writing' },
     { name: 'Speaking', icon: Mic, path: '/modules/speaking' },
     { name: 'Full Mock Test', icon: FileText, path: '/mock-test' },
-    { name: 'Diagnostic Test', icon: User, path: '/diagnostic' }
+    { name: 'Diagnostic Test', icon: User, path: '/diagnostic-test' }
   ];
 
   const handleSignOut = async () => {

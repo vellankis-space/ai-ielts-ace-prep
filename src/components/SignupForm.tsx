@@ -4,26 +4,46 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, User as UserIcon, ArrowRight, Chrome } from 'lucide-react';
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email address." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  confirmPassword: z.string().min(6, { message: "Password must be at least 6 characters." }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 const SignupForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
 
     try {
-      if (password !== confirmPassword) {
+      if (data.password !== data.confirmPassword) {
         toast({
           title: "Password Mismatch",
           description: "Passwords do not match. Please try again.",
@@ -35,13 +55,10 @@ const SignupForm: React.FC = () => {
 
       const redirectUrl = `${window.location.origin}/`;
       const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         options: {
           emailRedirectTo: redirectUrl,
-          data: {
-            full_name: fullName
-          }
         }
       });
 
@@ -87,151 +104,86 @@ const SignupForm: React.FC = () => {
   };
 
   return (
-    <>
-      <CardHeader className="space-y-1 pb-4 bg-blue-50 rounded-t-lg">
-        <CardTitle className="text-2xl font-semibold text-center">
-          Create Your Account
-        </CardTitle>
-        <CardDescription className="text-center">
-          Enter your details to get started
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full py-3 text-sm font-medium"
-            onClick={handleGoogleSignIn}
-          >
-            <Chrome className="w-5 h-5 mr-2" />
-            Continue with Google
-          </Button>
-        </div>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">or continue with email</span>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-              Full Name
-            </Label>
-            <div className="relative">
-              <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="Enter your full name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="pl-10 py-3"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email Address
-            </Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 py-3"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password
-            </Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 py-3"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-              Confirm Password
-            </Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="pl-10 py-3"
-                required
-              />
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full py-3 bg-gradient-to-r from-green-600 to-cyan-500 hover:from-green-700 hover:to-cyan-600 text-white font-medium"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="flex items-center">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                Creating account...
-              </div>
-            ) : (
-              <div className="flex items-center justify-center">
-                Create Account
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </div>
-            )}
-          </Button>
-        </form>
-
-        <p className="text-xs text-gray-500 text-center">
-          By creating an account, you agree to our{' '}
-          <Link to="/terms" className="text-blue-600 hover:text-blue-500 font-medium">
-            Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link to="/privacy" className="text-blue-600 hover:text-blue-500 font-medium">
-            Privacy Policy
-          </Link>
-        </p>
-
-        <div className="text-center pt-4 border-t border-gray-100">
-          <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 hover:text-blue-500 font-medium">
-              Sign in
-            </Link>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
+        <div className="grid gap-2 text-center">
+          <h1 className="text-3xl font-bold text-blue-800">Sign Up</h1>
+          <p className="text-balance text-gray-600">
+            Enter your information to create an account
           </p>
         </div>
-      </CardContent>
-    </>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  {...field}
+                  className="border-blue-300 focus:border-blue-500 focus:ring-blue-500"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  {...field}
+                  className="border-blue-300 focus:border-blue-500 focus:ring-blue-500"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  {...field}
+                  className="border-blue-300 focus:border-blue-500 focus:ring-blue-500"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-teal-500 text-white hover:from-blue-700 hover:to-teal-600" disabled={isLoading}>
+          {isLoading ? 'Signing up...' : 'Sign Up'}
+        </Button>
+        <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700" type="button" onClick={handleGoogleSignIn}>
+          Sign Up with Google
+        </Button>
+        <div className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="underline text-blue-600 hover:text-blue-500">
+            Login
+          </Link>
+        </div>
+      </form>
+    </Form>
   );
 };
 

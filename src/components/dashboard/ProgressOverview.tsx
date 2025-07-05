@@ -1,8 +1,13 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Headphones, BookOpen, PenTool, Mic } from 'lucide-react';
+import { Headphones, BookOpen, PenTool, Mic, TrendingUp } from 'lucide-react';
+import {
+  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip, Legend
+} from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
+import { type ChartConfig } from '@/components/ui/chart';
 
 interface ProgressOverviewProps {
   userData: {
@@ -17,11 +22,12 @@ interface ProgressOverviewProps {
 }
 
 const ProgressOverview = ({ userData }: ProgressOverviewProps) => {
+  const [isChartHovered, setIsChartHovered] = React.useState(false);
   const modules = [
-    { name: 'Listening', score: userData.moduleAverages.listening, icon: Headphones, color: 'bg-blue-500' },
-    { name: 'Reading', score: userData.moduleAverages.reading, icon: BookOpen, color: 'bg-green-500' },
-    { name: 'Writing', score: userData.moduleAverages.writing, icon: PenTool, color: 'bg-orange-500' },
-    { name: 'Speaking', score: userData.moduleAverages.speaking, icon: Mic, color: 'bg-purple-500' }
+    { name: 'Listening', score: userData.moduleAverages.listening, icon: Headphones, iconColor: 'text-blue-500', circleBgColor: 'bg-blue-100' },
+    { name: 'Reading', score: userData.moduleAverages.reading, icon: BookOpen, iconColor: 'text-green-500', circleBgColor: 'bg-green-100' },
+    { name: 'Writing', score: userData.moduleAverages.writing, icon: PenTool, iconColor: 'text-orange-500', circleBgColor: 'bg-orange-100' },
+    { name: 'Speaking', score: userData.moduleAverages.speaking, icon: Mic, iconColor: 'text-purple-500', circleBgColor: 'bg-purple-100' }
   ];
 
   const getBandDescription = (score: number) => {
@@ -39,18 +45,66 @@ const ProgressOverview = ({ userData }: ProgressOverviewProps) => {
     return 'text-red-600';
   };
 
+  const chartData = [
+    { subject: 'Listening', score: userData.moduleAverages.listening, fullMark: 9 },
+    { subject: 'Reading', score: userData.moduleAverages.reading, fullMark: 9 },
+    { subject: 'Writing', score: userData.moduleAverages.writing, fullMark: 9 },
+    { subject: 'Speaking', score: userData.moduleAverages.speaking, fullMark: 9 },
+  ];
+
+  const chartConfig = {
+    score: {
+      label: "Your Score",
+      color: "hsl(var(--primary))",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold flex items-center">
-          Overall Progress Overview
-        </CardTitle>
+      <CardHeader className="items-center pb-4">
+        <CardTitle>Overall Progress Overview</CardTitle>
+        <CardDescription>
+          Your performance across different IELTS modules
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          {/* Overall Score */}
-          <div className="lg:col-span-1 text-center">
-            <div className="mb-4">
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Overall Score - Radar Chart and Band */}
+          <Card className="flex flex-col items-center justify-center p-6">
+            <ChartContainer
+              config={chartConfig}
+              className="mx-auto aspect-square max-h-[250px] w-full"
+            >
+              <RadarChart
+            cx="50%"
+            cy="50%"
+            outerRadius="80%"
+            data={chartData}
+            onMouseEnter={() => setIsChartHovered(true)}
+            onMouseLeave={() => setIsChartHovered(false)}
+          >
+            <defs>
+              <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#2563eb" /> {/* Corresponds to blue-600 */}
+                <stop offset="100%" stopColor="#14b8a6" /> {/* Corresponds to teal-500 */}
+              </linearGradient>
+            </defs>
+            <PolarGrid />
+            <PolarAngleAxis dataKey="subject" />
+            <PolarRadiusAxis angle={90} domain={[0, 9]} />
+            <Radar
+              name="Your Score"
+              dataKey="score"
+              stroke="url(#scoreGradient)"
+              fill="url(#scoreGradient)"
+              fillOpacity={isChartHovered ? 0.8 : 0.6}
+              strokeWidth={isChartHovered ? 3 : 1}
+              activeDot={{ r: 8, fill: 'white', stroke: 'url(#scoreGradient)', strokeWidth: 2 }}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          </RadarChart>
+            </ChartContainer>
+            <div className="mt-4 text-center">
               <div className={`text-4xl font-bold ${getScoreColor(userData.currentBand)}`}>
                 {userData.currentBand}
               </div>
@@ -58,50 +112,24 @@ const ProgressOverview = ({ userData }: ProgressOverviewProps) => {
                 {getBandDescription(userData.currentBand)}
               </div>
             </div>
-            <div className="relative w-24 h-24 mx-auto">
-              <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeDasharray={`${(userData.currentBand / 9) * 100}, 100`}
-                  className={getScoreColor(userData.currentBand)}
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs font-medium">Band</span>
-              </div>
-            </div>
-          </div>
+          </Card>
           
           {/* Module Scores */}
-          <div className="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {modules.map((module) => (
-              <div key={module.name} className="text-center">
-                <div className="flex items-center justify-center mb-3">
-                  <div className={`p-3 rounded-full ${module.color.replace('bg-', 'bg-')} bg-opacity-10`}>
-                    <module.icon className={`w-6 h-6 ${module.color.replace('bg-', 'text-')}`} />
+              <Card key={module.name} className="text-center p-3">
+                <CardContent className="p-0">
+                  <div className="flex items-center justify-center mb-3">
+                    <div className={`p-3 rounded-full ${module.circleBgColor}`}>
+                    <module.icon className={`w-6 h-6 ${module.iconColor}`} />
+                    </div>
                   </div>
-                </div>
-                <h3 className="font-medium text-gray-900 mb-2">{module.name}</h3>
-                <div className={`text-2xl font-bold ${getScoreColor(module.score)} mb-2`}>
-                  {module.score}
-                </div>
-                <Progress 
-                  value={(module.score / 9) * 100} 
-                  className="h-2"
-                />
-                <div className="text-xs text-gray-500 mt-1">
-                  {module.score}/9.0
-                </div>
-              </div>
+                  <h3 className="font-medium text-gray-900 mb-2">{module.name}</h3>
+                  <div className={`text-2xl font-bold ${getScoreColor(module.score)} mb-2`}>
+                    {module.score}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
