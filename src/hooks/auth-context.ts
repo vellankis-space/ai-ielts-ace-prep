@@ -6,6 +6,8 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  profile: { game_mode_enabled: boolean; game_mode_disabled_timestamp: string | null } | null;
+  refreshProfile: () => Promise<void>; // New function to refresh profile
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

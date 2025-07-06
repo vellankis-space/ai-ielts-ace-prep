@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "@/hooks/useAuth";
+import { GameModeProvider } from "@/hooks/GameModeContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -31,67 +32,73 @@ import GeneralTrainingWritingPage from "./pages/GeneralTrainingWritingPage";
 import AcademicWritingPracticePage from "./pages/AcademicWritingPracticePage";
 import AdvancedWritingChallengePage from "./pages/AdvancedWritingChallengePage";
 import WritingResultsPage from "./pages/WritingResultsPage";
+import GamesPage from "./pages/GamesPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/modules" element={<ModuleSelection />} />
-            <Route path="/modules/:module" element={<ModuleDetail />} />
-            <Route path="/modules/writing/general-training" element={<GeneralTrainingWritingPage />} />
-            <Route path="/modules/writing/academic-practice" element={<AcademicWritingPracticePage />} />
-            <Route path="/modules/writing/advanced-challenge" element={<AdvancedWritingChallengePage />} />
-            <Route path="/modules/writing/results" element={<WritingResultsPage />} />
-            <Route path="/modules/:module/test" element={
-              <ProtectedRoute>
-                <TestInterface />
-              </ProtectedRoute>
-            } />
-            <Route path="/modules/:module/results" element={
-              <ProtectedRoute>
-                <TestResults />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/pricing" element={<ComingSoonPage />} />
-            <Route path="/blog" element={<ComingSoonPage />} />
-            <Route path="/mock-test" element={<MockTestPage />} />
-            <Route path="/diagnostic-test" element={<DiagnosticTestPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/about-us" element={<AboutUsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/faq" element={<FaqPage />} />
-            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-            <Route path="/cookie-policy" element={<CookiePolicyPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <GameModeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/modules" element={<ModuleSelection />} />
+                <Route path="/modules/:module" element={<ModuleDetail />} />
+                <Route path="/modules/writing/general-training" element={<GeneralTrainingWritingPage />} />
+                <Route path="/modules/writing/academic-practice" element={<AcademicWritingPracticePage />} />
+                <Route path="/modules/writing/advanced-challenge" element={<AdvancedWritingChallengePage />} />
+                <Route path="/modules/writing/results" element={<WritingResultsPage />} />
+                <Route path="/modules/:module/test" element={
+                  <ProtectedRoute>
+                    <TestInterface />
+                  </ProtectedRoute>
+                } />
+                <Route path="/modules/:module/results" element={
+                  <ProtectedRoute>
+                    <TestResults />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+                <Route path="/pricing" element={<ComingSoonPage />} />
+                <Route path="/blog" element={<ComingSoonPage />} />
+                <Route path="/mock-test" element={<MockTestPage />} />
+                <Route path="/diagnostic-test" element={<DiagnosticTestPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/about-us" element={<AboutUsPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/faq" element={<FaqPage />} />
+                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+                <Route path="/games" element={<GamesPage />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </GameModeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

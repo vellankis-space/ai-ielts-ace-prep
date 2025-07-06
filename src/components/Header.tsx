@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Menu, X, ChevronDown, User, BookOpen, Headphones, PenTool, Mic, FileText, LogOut, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/hooks/auth-context';
 import { Button } from '@/components/ui/button';
+import GameModeToggle from './GameModeToggle';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,6 +77,12 @@ const Header = () => {
               </div>
             </div>
             
+            {user && (
+              <Link to="/games" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Games
+              </Link>
+            )}
+            
             <Link to="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors">
               Pricing
             </Link>
@@ -86,6 +93,7 @@ const Header = () => {
 
           {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
+            {user && <GameModeToggle />}
             {user ? (
               <div className="relative">
                 <button
