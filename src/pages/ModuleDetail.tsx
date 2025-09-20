@@ -98,21 +98,15 @@ const ModuleDetail = () => {
       tests: [
         {
           name: 'Academic Reading Test 1',
-          difficulty: 'Intermediate',
+          difficulty: 'Academic',
           duration: '60 minutes',
           description: 'Three academic passages with varied question types'
         },
         {
           name: 'General Training Reading',
-          difficulty: 'Beginner',
+          difficulty: 'General',
           duration: '60 minutes',
           description: 'Workplace and social contexts'
-        },
-        {
-          name: 'Advanced Reading Challenge',
-          difficulty: 'Advanced',
-          duration: '60 minutes',
-          description: 'Complex academic texts with challenging vocabulary'
         }
       ]
     },
@@ -366,13 +360,18 @@ const ModuleDetail = () => {
                   <div key={index} className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-semibold text-gray-900">{test.name}</h4>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        test.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
-                        test.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {test.difficulty}
-                      </span>
+                      {test.difficulty && (
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          test.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
+                          test.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                          test.difficulty === 'Advanced' ? 'bg-red-100 text-red-800' :
+                          test.difficulty === 'Academic' ? 'bg-blue-100 text-blue-800' :
+                          test.difficulty === 'General' ? 'bg-purple-100 text-purple-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {test.difficulty}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center text-sm text-gray-600 mb-3">
                       <Clock className="w-4 h-4 mr-1" />

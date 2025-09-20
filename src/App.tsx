@@ -33,6 +33,7 @@ import AcademicWritingPracticePage from "./pages/AcademicWritingPracticePage";
 import AdvancedWritingChallengePage from "./pages/AdvancedWritingChallengePage";
 import WritingResultsPage from "./pages/WritingResultsPage";
 import GamesPage from "./pages/GamesPage";
+import ReadingModulePage from "./pages/ReadingModulePage";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,11 @@ const App = () => {
                 <Route path="/modules/writing/academic-practice" element={<AcademicWritingPracticePage />} />
                 <Route path="/modules/writing/advanced-challenge" element={<AdvancedWritingChallengePage />} />
                 <Route path="/modules/writing/results" element={<WritingResultsPage />} />
+                <Route path="/modules/reading/test" element={
+                  <ProtectedRoute>
+                    <ReadingModulePage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/modules/:module/test" element={
                   <ProtectedRoute>
                     <TestInterface />

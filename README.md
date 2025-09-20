@@ -1,73 +1,174 @@
-# Welcome to your Lovable project
+# IELTS AI: Level Up Your English
 
-## Project info
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/react-%2320232a.svg?logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-**URL**: https://lovable.dev/projects/08a16305-bae1-4bd8-a340-0faac334cbe3
+IELTS AI is a comprehensive SaaS platform designed to help English language learners prepare for the IELTS (International English Language Testing System) exam. Leveraging AI-powered tools and personalized learning paths, the platform helps users achieve their target band scores efficiently.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **AI-Powered IELTS Preparation**: Personalized feedback and adaptive learning paths
+- **Realistic Mock Tests**: Practice tests that mirror actual IELTS exams
+- **Comprehensive Module Coverage**: Listening, Reading, Writing, and Speaking modules
+- **Progress Tracking**: Dashboard with performance analytics and band score visualization
+- **Instant Feedback**: Detailed scoring and improvement suggestions powered by AI
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/08a16305-bae1-4bd8-a340-0faac334cbe3) and start prompting.
+### Frontend
+- **Framework**: [React](https://reactjs.org/) with [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/) components
+- **Routing**: [React Router](https://reactrouter.com/)
+- **State Management**: [React Query](https://tanstack.com/query/latest) for server state, React Context for global state
+- **UI Components**: [Radix UI](https://www.radix-ui.com/), [Framer Motion](https://www.framer.com/motion/)
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend
+- **API Layer**: [Express.js](https://expressjs.com/)
+- **AI Integration**: [OpenAI API](https://platform.openai.com/)
+- **Database**: [Supabase](https://supabase.com/) (PostgreSQL)
 
-**Use your preferred IDE**
+### Additional Libraries
+- **Form Handling**: [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod.dev/) validation
+- **Data Visualization**: [Recharts](https://recharts.org/)
+- **Date Handling**: [date-fns](https://date-fns.org/)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd ai-ielts-ace-prep
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following variables:
+   ```env
+   OPENAI_API_KEY=your_openai_api_key
+   OPENAI_ORGANIZATION=your_openai_organization
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Development
+
+Start the development server:
+```bash
 npm run dev
+# or
+yarn dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Start the backend server:
+```bash
+npm run server
+# or
+yarn server
+```
 
-**Use GitHub Codespaces**
+The backend API will be available at `http://localhost:3001`.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Building for Production
 
-## What technologies are used for this project?
+To create a production build:
+```bash
+npm run build
+# or
+yarn build
+```
 
-This project is built with:
+To preview the production build:
+```bash
+npm run preview
+# or
+yarn preview
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Linting and Type Checking
 
-## How can I deploy this project?
+Run ESLint:
+```bash
+npm run lint
+# or
+yarn lint
+```
 
-Simply open [Lovable](https://lovable.dev/projects/08a16305-bae1-4bd8-a340-0faac334cbe3) and click on Share -> Publish.
+Run TypeScript type checking:
+```bash
+npm run type-check
+# or
+yarn type-check
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Project Structure
 
-Yes, you can!
+```
+src/
+├── components/     # Reusable UI components
+├── hooks/          # Custom React hooks
+├── integrations/   # Third-party service integrations
+├── lib/            # Utility functions and libraries
+├── pages/          # Page components
+├── types/          # TypeScript type definitions
+└── App.tsx         # Main application component
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## IELTS Reading Module
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+The IELTS Reading module provides AI-generated passages and questions for both Academic and General Training tests:
+
+### Features
+- **Passage Generation**: AI-powered generation of realistic IELTS reading passages
+- **Question Types**: Support for all IELTS reading question types including:
+  - Multiple Choice
+  - True/False/Not Given
+  - Matching Headings
+  - Sentence Completion
+  - Short Answer Questions
+  - And more
+- **Adaptive Difficulty**: Questions adjusted based on user performance
+- **Detailed Scoring**: Band score calculation with detailed feedback
+
+### API Endpoints
+- `POST /api/ielts/generate-passage`: Generate a reading passage
+- `POST /api/ielts/generate-questions`: Generate questions for a passage
+- `POST /api/ielts/score-test`: Score a completed test with feedback
+
+## Contributing
+
+We welcome contributions to IELTS AI! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, please open an issue on the GitHub repository or contact our team at [support@ielts-ai.com](mailto:support@ielts-ai.com).
+
+## Acknowledgments
+
+- Thanks to [OpenAI](https://openai.com/) for providing the AI capabilities that power this platform
+- Thanks to all the open-source projects that made this platform possible
