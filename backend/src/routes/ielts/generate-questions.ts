@@ -1,5 +1,5 @@
 import express from 'express';
-import openai from '../../../lib/openai.ts';
+import openai from '../../lib/openai.ts';
 
 type Request = express.Request;
 type Response = express.Response;
@@ -155,8 +155,8 @@ export default async function handler(req: Request, res: Response) {
     }
 
     // Get question distribution based on test type
-    const distribution = QUESTION_TYPE_DISTRIBUTION[testType as keyof typeof QUESTION_TYPE_DISTRIBUTION] || 
-                        QUESTION_TYPE_DISTRIBUTION.academic;
+    const distribution = QUESTION_TYPE_DISTRIBUTION[testType as keyof typeof QUESTION_TYPE_DISTRIBUTION] ||
+      QUESTION_TYPE_DISTRIBUTION.academic;
 
     // Generate questions for each question type
     const allQuestions = [];
@@ -164,12 +164,12 @@ export default async function handler(req: Request, res: Response) {
 
     for (const [questionType, count] of Object.entries(distribution)) {
       const questions = await generateQuestionsByType(
-        passage, 
-        questionType, 
-        count, 
+        passage,
+        questionType,
+        count,
         questionIdCounter
       );
-      
+
       allQuestions.push(...questions);
       questionIdCounter += questions.length;
     }
@@ -182,13 +182,13 @@ export default async function handler(req: Request, res: Response) {
 }
 
 async function generateQuestionsByType(
-  passage: string, 
-  questionType: string, 
-  count: number, 
+  passage: string,
+  questionType: string,
+  count: number,
   startId: number
 ) {
   let prompt = '';
-  
+
   switch (questionType) {
     case 'true_false_not_given':
       prompt = TRUE_FALSE_NOT_GIVEN_PROMPT
@@ -198,13 +198,13 @@ async function generateQuestionsByType(
         .replace('{mediumCount}', Math.ceil(count * 0.4).toString())
         .replace('{hardCount}', Math.ceil(count * 0.3).toString());
       break;
-      
+
     case 'multiple_choice':
       prompt = MULTIPLE_CHOICE_PROMPT
         .replace('{passage}', passage)
         .replace('{numberOfQuestions}', count.toString());
       break;
-      
+
     case 'matching_headings':
       // For matching headings, we need to determine paragraph count
       const paragraphCount = passage.split('\n\n').filter(p => p.trim().length > 0).length || 5;
@@ -214,7 +214,7 @@ async function generateQuestionsByType(
         .replace('{numberOfHeadings}', (paragraphCount + 2).toString())
         .replace('{extraHeadings}', '2');
       break;
-      
+
     default:
       // For other question types, we'll use a generic prompt template
       prompt = `
@@ -263,18 +263,18 @@ function parseQuestions(content: string, questionType: string, startId: number) 
   // Simple parsing implementation - in a production environment, you might want more robust parsing
   const questions = [];
   const lines = content.split('\n').filter(line => line.trim() !== '');
-  
+
   // This is a simplified parser - a full implementation would need more sophisticated parsing
   // based on the specific format of each question type
   let currentQuestion = null;
   let questionCounter = startId;
-  
+
   for (const line of lines) {
     if (line.toLowerCase().startsWith('question')) {
       if (currentQuestion) {
         questions.push(currentQuestion);
       }
-      
+
       currentQuestion = {
         id: `question-${questionCounter}`,
         passageId: '',
@@ -285,11 +285,11 @@ function parseQuestions(content: string, questionType: string, startId: number) 
         explanation: '',
         difficulty: 5.0
       };
-      
+
       questionCounter++;
     } else if (currentQuestion) {
-      if (line.toLowerCase().startsWith('a)') || line.toLowerCase().startsWith('b)') || 
-          line.toLowerCase().startsWith('c)') || line.toLowerCase().startsWith('d)')) {
+      if (line.toLowerCase().startsWith('a)') || line.toLowerCase().startsWith('b)') ||
+        line.toLowerCase().startsWith('c)') || line.toLowerCase().startsWith('d)')) {
         currentQuestion.options.push(line.substring(3).trim());
       } else if (line.toLowerCase().startsWith('correct answer:')) {
         currentQuestion.correctAnswer = line.substring(15).trim();
@@ -312,11 +312,11 @@ function parseQuestions(content: string, questionType: string, startId: number) 
       }
     }
   }
-  
+
   // Add the last question
   if (currentQuestion) {
     questions.push(currentQuestion);
   }
-  
+
   return questions;
 }

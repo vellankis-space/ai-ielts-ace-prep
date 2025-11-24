@@ -1,5 +1,5 @@
 import express from 'express';
-import openai from '../../../lib/openai.ts';
+import openai from '../../lib/openai.ts';
 
 type Request = express.Request;
 type Response = express.Response;
@@ -86,7 +86,7 @@ export default async function handler(req: Request, res: Response) {
     // Determine word count based on difficulty
     let wordCount = '600-900';
     let sectionType = 'Section 3 (General Reading)';
-    
+
     if (testType === 'general') {
       switch (difficulty) {
         case 'beginner':
@@ -105,15 +105,15 @@ export default async function handler(req: Request, res: Response) {
     }
 
     // Select appropriate prompt
-    const prompt = testType === 'academic' 
+    const prompt = testType === 'academic'
       ? ACADEMIC_PASSAGE_PROMPT
-          .replace('{topic}', topic)
-          .replace('{difficulty}', difficulty)
+        .replace('{topic}', topic)
+        .replace('{difficulty}', difficulty)
       : GENERAL_PASSAGE_PROMPT
-          .replace('{topic}', topic)
-          .replace('{wordCount}', wordCount)
-          .replace('{difficulty}', difficulty)
-          .replace('{sectionType}', sectionType);
+        .replace('{topic}', topic)
+        .replace('{wordCount}', wordCount)
+        .replace('{difficulty}', difficulty)
+        .replace('{sectionType}', sectionType);
 
     // Generate passage using OpenAI
     const completion = await openai.chat.completions.create({
@@ -133,7 +133,7 @@ export default async function handler(req: Request, res: Response) {
     });
 
     const generatedContent = completion.choices[0].message.content;
-    
+
     // Parse the generated content to extract passage details
     const passage = parsePassageContent(generatedContent, testType, topic, difficulty);
 
@@ -147,26 +147,26 @@ export default async function handler(req: Request, res: Response) {
 function parsePassageContent(content: string, testType: string, topic: string, difficulty: string) {
   // Simple parsing implementation - in a production environment, you might want more robust parsing
   const lines = content.split('\n').filter(line => line.trim() !== '');
-  
+
   let title = `${testType.charAt(0).toUpperCase() + testType.slice(1)} Reading: ${topic}`;
   let passageContent = content;
   let wordCount = 0;
-  
+
   // Extract title if present
   const titleMatch = content.match(/Title:\s*(.+)/i);
   if (titleMatch) {
     title = titleMatch[1].trim();
   }
-  
+
   // Extract passage content
   const passageMatch = content.match(/Passage:\s*([\s\S]*?)(?=Key Points:|Vocabulary Level:|Title:|$)/i);
   if (passageMatch) {
     passageContent = passageMatch[1].trim();
   }
-  
+
   // Calculate word count
   wordCount = passageContent.trim().split(/\s+/).length;
-  
+
   return {
     id: `passage-${Date.now()}`,
     title,

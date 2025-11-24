@@ -1,5 +1,5 @@
 import express from 'express';
-import openai from '../../../lib/openai.ts';
+import openai from '../../lib/openai.ts';
 
 type Request = express.Request;
 type Response = express.Response;
@@ -95,8 +95,8 @@ export default async function handler(req: Request, res: Response) {
 
     // Validate input
     if (!questions || !userAnswers || !testType) {
-      return res.status(400).json({ 
-        message: 'Missing required parameters: questions, userAnswers, testType' 
+      return res.status(400).json({
+        message: 'Missing required parameters: questions, userAnswers, testType'
       });
     }
 
@@ -107,9 +107,9 @@ export default async function handler(req: Request, res: Response) {
     questions.forEach((question: any) => {
       const userAnswer = userAnswers[question.id];
       const isCorrect = compareAnswers(userAnswer, question.correctAnswer, question.type);
-      
+
       if (isCorrect) correctAnswers++;
-      
+
       questionResults.push({
         questionId: question.id,
         userAnswer,
@@ -126,7 +126,7 @@ export default async function handler(req: Request, res: Response) {
     const formattedStudentAnswers = Object.entries(userAnswers).map(
       ([id, answer]) => `Q${id.split('-')[1]}: ${answer}`
     ).join('\n');
-    
+
     const formattedCorrectAnswers = questions.map(
       (q: any) => `Q${q.id.split('-')[1]}: ${Array.isArray(q.correctAnswer) ? q.correctAnswer.join(' or ') : q.correctAnswer}`
     ).join('\n');
@@ -176,20 +176,20 @@ export default async function handler(req: Request, res: Response) {
 function compareAnswers(userAnswer: string, correctAnswer: string | string[], questionType: string): boolean {
   // Implementation for different answer comparison logic based on question type
   if (!userAnswer) return false;
-  
+
   if (Array.isArray(correctAnswer)) {
-    return correctAnswer.some(answer => 
+    return correctAnswer.some(answer =>
       userAnswer?.toLowerCase().trim() === answer.toLowerCase().trim()
     );
   }
-  
+
   // For multiple choice, we might have "A" vs "A)"
   if (questionType === 'multiple_choice') {
     const normalizedUserAnswer = userAnswer.toLowerCase().replace(/[).]/g, '').trim();
     const normalizedCorrectAnswer = (correctAnswer as string).toLowerCase().replace(/[).]/g, '').trim();
     return normalizedUserAnswer === normalizedCorrectAnswer;
   }
-  
+
   return userAnswer?.toLowerCase().trim() === (correctAnswer as string)?.toLowerCase().trim();
 }
 
@@ -214,10 +214,10 @@ function calculateBandScore(correctAnswers: number, testType: string): number {
   ];
 
   const bands = testType === 'academic' ? academicBands : generalBands;
-  
+
   for (const { min, band } of bands) {
     if (correctAnswers >= min) return band;
   }
-  
+
   return 0.0;
 }

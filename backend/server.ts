@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import generatePassageRoute from './src/pages/api/ielts/generate-passage.ts';
-import generateQuestionsRoute from './src/pages/api/ielts/generate-questions.ts';
-import scoreTestRoute from './src/pages/api/ielts/score-test.ts';
+import generatePassageRoute from './src/routes/ielts/generate-passage.ts';
+import generateQuestionsRoute from './src/routes/ielts/generate-questions.ts';
+import scoreTestRoute from './src/routes/ielts/score-test.ts';
 
 dotenv.config();
 console.log('OPENAI_API_KEY:', process.env.OPENAI_API_KEY);

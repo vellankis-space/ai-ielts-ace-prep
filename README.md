@@ -40,7 +40,7 @@ IELTS AI is a comprehensive SaaS platform designed to help English language lear
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v16 or higher)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) or [bun](https://bun.sh/)
 
 ### Installation
 
@@ -50,15 +50,17 @@ IELTS AI is a comprehensive SaaS platform designed to help English language lear
    cd ai-ielts-ace-prep
    ```
 
-2. Install dependencies:
+2. Install dependencies for both frontend and backend:
    ```bash
-   npm install
-   # or
-   yarn install
+   # Using npm
+   npm install && cd frontend && npm install && cd ../backend && npm install
+   
+   # Using bun
+   bun install && cd frontend && bun install && cd ../backend && bun install
    ```
 
 3. Set up environment variables:
-   Create a `.env` file in the root directory with the following variables:
+   Create a `.env` file in the `backend` directory (and `frontend` if needed) with the following variables:
    ```env
    OPENAI_API_KEY=your_openai_api_key
    OPENAI_ORGANIZATION=your_openai_organization
@@ -66,67 +68,72 @@ IELTS AI is a comprehensive SaaS platform designed to help English language lear
 
 ### Development
 
-Start the development server:
+Start both frontend and backend servers concurrently:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
+Or run them individually:
+
+**Frontend:**
+```bash
+npm run dev:frontend
+```
 The application will be available at `http://localhost:8080`.
 
-Start the backend server:
+**Backend:**
 ```bash
-npm run server
-# or
-yarn server
+npm run dev:backend
 ```
-
 The backend API will be available at `http://localhost:3001`.
 
 ### Building for Production
 
-To create a production build:
+To create a production build for the frontend:
 ```bash
+cd frontend
 npm run build
-# or
-yarn build
 ```
 
 To preview the production build:
 ```bash
+cd frontend
 npm run preview
-# or
-yarn preview
 ```
 
 ### Linting and Type Checking
 
-Run ESLint:
+Run ESLint (Frontend):
 ```bash
+cd frontend
 npm run lint
-# or
-yarn lint
 ```
 
-Run TypeScript type checking:
+Run TypeScript type checking (Frontend):
 ```bash
+cd frontend
 npm run type-check
-# or
-yarn type-check
 ```
 
 ## Project Structure
 
 ```
-src/
-├── components/     # Reusable UI components
-├── hooks/          # Custom React hooks
-├── integrations/   # Third-party service integrations
-├── lib/            # Utility functions and libraries
-├── pages/          # Page components
-├── types/          # TypeScript type definitions
-└── App.tsx         # Main application component
+ai-ielts-ace-prep/
+├── frontend/           # Frontend application (Vite + React)
+│   ├── src/            # Source code
+│   │   ├── components/ # Reusable UI components
+│   │   ├── hooks/      # Custom React hooks
+│   │   ├── pages/      # Page components
+│   │   └── ...
+│   ├── public/         # Static assets
+│   └── ...
+├── backend/            # Backend application (Express)
+│   ├── src/
+│   │   ├── routes/     # API routes
+│   │   ├── lib/        # Shared libraries/utilities
+│   │   └── ...
+│   └── server.ts       # Server entry point
+└── package.json        # Root scripts
 ```
 
 ## IELTS Reading Module
