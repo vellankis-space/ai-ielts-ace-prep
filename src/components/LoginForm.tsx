@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -86,13 +86,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
-        <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-bold text-blue-800">Login</h1>
-          <p className="text-balance text-gray-600">
-            Enter your email below to login to your account
-          </p>
-        </div>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
@@ -100,7 +94,7 @@ const LoginForm: React.FC = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="m@example.com" {...field} className="border-blue-300 focus:border-blue-500 focus:ring-blue-500" />
+                <Input placeholder="m@example.com" {...field} className="h-11 bg-white/5 border-white/10 focus:border-primary/50" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -111,34 +105,54 @@ const LoginForm: React.FC = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center">
+              <div className="flex items-center justify-between">
                 <FormLabel>Password</FormLabel>
                 <Link
                   to="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
+                  className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                 >
-                  Forgot your password?
+                  Forgot password?
                 </Link>
               </div>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type="password" {...field} className="h-11 bg-white/5 border-white/10 focus:border-primary/50" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-teal-500 text-white hover:from-blue-700 hover:to-teal-600" disabled={isLoading}>
-          {isLoading ? 'Signing in...' : 'Login'}
-        </Button>
-        <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700" type="button" onClick={handleGoogleSignIn}>
-          Login with Google
-        </Button>
-        <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup" className="underline">
-              Sign up
-            </Link>
+
+        <div className="space-y-4">
+          <Button type="submit" className="w-full h-11 text-base shadow-lg shadow-primary/20" disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Sign In
+          </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
           </div>
+
+          <Button variant="outline" className="w-full h-11 border-white/10 hover:bg-white/5" type="button" onClick={handleGoogleSignIn}>
+            <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+              <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+            </svg>
+            Google
+          </Button>
+        </div>
+
+        <div className="text-center text-sm text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link to="/signup" className="font-medium text-primary hover:text-primary/80 transition-colors">
+            Sign up
+          </Link>
+        </div>
       </form>
     </Form>
   );

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -17,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { Loader2, Mail } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -68,30 +67,26 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-    <div className="mx-auto grid w-[350px] gap-6 bg-white p-8 rounded-lg shadow-lg">
-      
+    <div className="w-full">
       {isSubmitted ? (
-        <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-bold text-blue-800">Email Sent</h1>
-          <p className="text-balance text-gray-600">
-            A password reset link has been sent to <strong>{form.getValues('email')}</strong>.
-            Please check your inbox.
-          </p>
-          <div className="mt-4 text-center text-sm">
-            <Link to="/login" className="underline text-blue-600 hover:text-blue-500">
-              Back to Login
-            </Link>
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+            <Mail className="w-8 h-8 text-primary" />
           </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-semibold">Check your email</h3>
+            <p className="text-muted-foreground text-sm">
+              We've sent a password reset link to <br />
+              <span className="font-medium text-foreground">{form.getValues('email')}</span>
+            </p>
+          </div>
+          <Button asChild className="w-full h-11">
+            <Link to="/login">Back to Login</Link>
+          </Button>
         </div>
       ) : (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
-            <div className="grid gap-2 text-center">
-              <h1 className="text-3xl font-bold text-blue-800">Forgot Password</h1>
-              <p className="text-balance text-gray-600">
-                Enter your email to get a password reset link.
-              </p>
-            </div>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="email"
@@ -105,19 +100,20 @@ const ForgotPasswordForm = () => {
                       placeholder="m@example.com"
                       required
                       {...field}
-                      className="border-blue-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="h-11 bg-white/5 border-white/10 focus:border-primary/50"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-teal-500 text-white hover:from-blue-700 hover:to-teal-600" disabled={isLoading}>
-              {isLoading ? "Sending..." : "Send Reset Link"}
+            <Button type="submit" className="w-full h-11 text-base shadow-lg shadow-primary/20" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Send Reset Link
             </Button>
-            <div className="mt-4 text-center text-sm">
+            <div className="text-center text-sm text-muted-foreground">
               Remember your password?{" "}
-              <Link to="/login" className="underline text-blue-600 hover:text-blue-500">
+              <Link to="/login" className="font-medium text-primary hover:text-primary/80 transition-colors">
                 Login
               </Link>
             </div>

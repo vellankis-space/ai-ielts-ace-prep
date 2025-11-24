@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
-import Breadcrumb from '@/components/Breadcrumb';
 import { useAuth } from '@/hooks/auth-context';
 import WelcomeSection from '@/components/dashboard/WelcomeSection';
 import ProgressOverview from '@/components/dashboard/ProgressOverview';
@@ -12,6 +10,7 @@ import StrengthsWeaknesses from '@/components/dashboard/StrengthsWeaknesses';
 import GoalSetting from '@/components/dashboard/GoalSetting';
 import Achievements from '@/components/dashboard/Achievements';
 import QuickAccess from '@/components/dashboard/QuickAccess';
+import { motion } from 'framer-motion';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -91,54 +90,88 @@ const Dashboard = () => {
     return null;
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Breadcrumb items={[{ label: 'Dashboard' }]} />
-          
-          <div className="space-y-8">
+      <div className="min-h-screen bg-background pt-20 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-8"
+          >
             {/* Welcome Section */}
-            <WelcomeSection user={user} userData={userData} />
-            
+            <motion.div variants={itemVariants}>
+              <WelcomeSection user={user} userData={userData} />
+            </motion.div>
+
             {/* Progress Overview */}
-            <ProgressOverview userData={userData} />
-            
+            <motion.div variants={itemVariants}>
+              <ProgressOverview userData={userData} />
+            </motion.div>
+
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Test History */}
-                <TestHistory tests={userData.recentTests} />
-                
+                <motion.div variants={itemVariants}>
+                  <TestHistory tests={userData.recentTests} />
+                </motion.div>
+
                 {/* Study Plan */}
-                <StudyPlan recommendations={userData.recommendations} />
+                <motion.div variants={itemVariants}>
+                  <StudyPlan recommendations={userData.recommendations} />
+                </motion.div>
               </div>
-              
+
               {/* Right Column */}
               <div className="space-y-8">
                 {/* Strengths & Weaknesses */}
-                <StrengthsWeaknesses 
-                  strengths={userData.strengths}
-                  weaknesses={userData.weaknesses}
-                  moduleAverages={userData.moduleAverages}
-                />
-                
+                <motion.div variants={itemVariants}>
+                  <StrengthsWeaknesses
+                    strengths={userData.strengths}
+                    weaknesses={userData.weaknesses}
+                    moduleAverages={userData.moduleAverages}
+                  />
+                </motion.div>
+
                 {/* Goal Setting */}
-                <GoalSetting 
-                  currentBand={userData.currentBand}
-                  targetBand={targetBand}
-                  setTargetBand={setTargetBand}
-                />
-                
+                <motion.div variants={itemVariants}>
+                  <GoalSetting
+                    currentBand={userData.currentBand}
+                    targetBand={targetBand}
+                    setTargetBand={setTargetBand}
+                  />
+                </motion.div>
+
                 {/* Achievements */}
-                <Achievements achievements={userData.achievements} />
+                <motion.div variants={itemVariants}>
+                  <Achievements achievements={userData.achievements} />
+                </motion.div>
               </div>
             </div>
-            
+
             {/* Quick Access */}
-            <QuickAccess />
-          </div>
+            <motion.div variants={itemVariants}>
+              <QuickAccess />
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </Layout>

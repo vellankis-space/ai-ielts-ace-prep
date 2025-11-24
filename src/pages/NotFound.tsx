@@ -1,34 +1,43 @@
-
 import React from 'react';
-import Layout from '../components/Layout';
+import Layout from '@/components/Layout';
 import { Link } from 'react-router-dom';
-import { Home, ArrowLeft } from 'lucide-react';
+import { Home, ArrowLeft, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const NotFound = () => {
   return (
     <Layout>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center max-w-md mx-auto px-4">
-          <div className="text-8xl font-bold text-blue-600 mb-4">404</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Page Not Found</h1>
-          <p className="text-gray-600 mb-8">
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center max-w-md mx-auto">
+          <div className="relative mb-8">
+            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+            <div className="relative text-9xl font-bold text-primary/20">404</div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Search className="w-24 h-24 text-primary" />
+            </div>
+          </div>
+
+          <h1 className="text-3xl font-bold tracking-tight mb-4">Page Not Found</h1>
+          <p className="text-muted-foreground mb-8 text-lg">
             Sorry, we couldn't find the page you're looking for. The page might have been moved or doesn't exist.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Home className="mr-2 w-4 h-4" />
-              Back to Home
-            </Link>
-            <button
+            <Button asChild size="lg" className="shadow-lg shadow-primary/20">
+              <Link to="/">
+                <Home className="mr-2 w-4 h-4" />
+                Back to Home
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
               onClick={() => window.history.back()}
-              className="inline-flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+              className="border-white/10 hover:bg-white/5"
             >
               <ArrowLeft className="mr-2 w-4 h-4" />
               Go Back
-            </button>
+            </Button>
           </div>
         </div>
       </div>

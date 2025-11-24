@@ -26,28 +26,28 @@ const StrengthsWeaknesses = ({ strengths, weaknesses, moduleAverages }: Strength
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-green-200 bg-green-50">
+        <Card className="border-emerald-500/20 bg-emerald-500/5">
           <CardContent className="p-4 flex items-center space-x-3">
-            <div className="p-2 bg-green-100 rounded-full">
-              <TrendingUp className="w-5 h-5 text-green-600" />
+            <div className="p-2 bg-emerald-500/10 rounded-full">
+              <TrendingUp className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <h3 className="font-medium text-green-900">Strongest Skill</h3>
-              <p className="text-green-700">
+              <h3 className="font-medium text-emerald-400">Strongest Skill</h3>
+              <p className="text-emerald-500/80 text-sm">
                 {capitalize(strongest[0])} ({strongest[1]} average)
               </p>
             </div>
           </CardContent>
         </Card>
-        
-        <Card className="border-orange-200 bg-orange-50">
+
+        <Card className="border-orange-500/20 bg-orange-500/5">
           <CardContent className="p-4 flex items-center space-x-3">
-            <div className="p-2 bg-orange-100 rounded-full">
-              <TrendingDown className="w-5 h-5 text-orange-600" />
+            <div className="p-2 bg-orange-500/10 rounded-full">
+              <TrendingDown className="w-5 h-5 text-orange-500" />
             </div>
             <div>
-              <h3 className="font-medium text-orange-900">Improvement Area</h3>
-              <p className="text-orange-700">
+              <h3 className="font-medium text-orange-400">Improvement Area</h3>
+              <p className="text-orange-500/80 text-sm">
                 {capitalize(weakest[0])} ({weakest[1]} average)
               </p>
             </div>
@@ -56,9 +56,9 @@ const StrengthsWeaknesses = ({ strengths, weaknesses, moduleAverages }: Strength
       </div>
 
       {/* Detailed Strengths */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold flex items-center text-green-700">
+      <Card className="glass-card border-white/5">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold flex items-center text-emerald-400">
             <CheckCircle className="w-5 h-5 mr-2" />
             Your Strengths
           </CardTitle>
@@ -66,9 +66,9 @@ const StrengthsWeaknesses = ({ strengths, weaknesses, moduleAverages }: Strength
         <CardContent>
           <div className="space-y-3">
             {strengths.map((strength, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">{strength}</span>
+              <div key={index} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
+                <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-muted-foreground">{strength}</span>
               </div>
             ))}
           </div>
@@ -76,9 +76,9 @@ const StrengthsWeaknesses = ({ strengths, weaknesses, moduleAverages }: Strength
       </Card>
 
       {/* Areas for Improvement */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold flex items-center text-orange-700">
+      <Card className="glass-card border-white/5">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold flex items-center text-orange-400">
             <AlertTriangle className="w-5 h-5 mr-2" />
             Areas for Improvement
           </CardTitle>
@@ -86,9 +86,9 @@ const StrengthsWeaknesses = ({ strengths, weaknesses, moduleAverages }: Strength
         <CardContent>
           <div className="space-y-3">
             {weaknesses.map((weakness, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <AlertTriangle className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                <span className="text-gray-700">{weakness}</span>
+              <div key={index} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
+                <AlertTriangle className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-muted-foreground">{weakness}</span>
               </div>
             ))}
           </div>

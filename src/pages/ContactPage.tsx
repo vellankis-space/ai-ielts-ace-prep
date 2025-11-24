@@ -1,50 +1,120 @@
 import React from 'react';
-import Layout from '../components/Layout';
+import Layout from '@/components/Layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Mail, MapPin, Phone, Send, MessageSquare } from 'lucide-react';
 
 const ContactPage: React.FC = () => {
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-6">Contact Us</h1>
-        <p className="text-lg mb-4">
-          We'd love to hear from you! Please use the form below to get in touch with us, or reach out via the contact details provided.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Send us a message</h2>
-            {/* Placeholder for a contact form */}
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" id="name" name="name" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
-                <textarea id="message" name="message" rows={4} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-              </div>
-              <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Send Message
-              </button>
-            </form>
+      <div className="min-h-screen bg-background pt-20 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Have questions about our platform or need support? We're here to help.
+            </p>
           </div>
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Our Contact Details</h2>
-            <p className="text-lg mb-2">
-              <strong>Email:</strong> support@aiieltsaceprep.com
-            </p>
-            <p className="text-lg mb-2">
-              <strong>Phone:</strong> +1 (123) 456-7890
-            </p>
-            <p className="text-lg mb-2">
-              <strong>Address:</strong> 123 IELTS Prep Lane, Suite 100, Exam City, PC 90210
-            </p>
-            <p className="text-lg">
-              Our support team is available Monday to Friday, 9 AM - 5 PM (EST).
-            </p>
+
+          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Contact Info */}
+            <div className="space-y-8">
+              <div className="glass-panel p-8 rounded-2xl">
+                <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">Email</h3>
+                      <p className="text-muted-foreground">support@aiieltsaceprep.com</p>
+                      <p className="text-sm text-muted-foreground mt-1">Response time: Within 24 hours</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">Phone</h3>
+                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-sm text-muted-foreground mt-1">Mon-Fri, 9am-5pm EST</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">Office</h3>
+                      <p className="text-muted-foreground">
+                        123 Innovation Drive, Suite 100<br />
+                        Tech City, TC 90210
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass-panel p-8 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent border-primary/20">
+                <div className="flex items-center space-x-4 mb-4">
+                  <MessageSquare className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold">Live Chat Support</h3>
+                </div>
+                <p className="text-muted-foreground mb-6">
+                  Need immediate assistance? Our support team is available for live chat during business hours.
+                </p>
+                <Button className="w-full">Start Live Chat</Button>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <Card className="glass-card border-white/5 p-8">
+              <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+              <form className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="firstName" className="text-sm font-medium">First Name</label>
+                    <Input id="firstName" placeholder="John" className="bg-white/5 border-white/10" />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="lastName" className="text-sm font-medium">Last Name</label>
+                    <Input id="lastName" placeholder="Doe" className="bg-white/5 border-white/10" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium">Email</label>
+                  <Input id="email" type="email" placeholder="john@example.com" className="bg-white/5 border-white/10" />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="subject" className="text-sm font-medium">Subject</label>
+                  <Input id="subject" placeholder="How can we help?" className="bg-white/5 border-white/10" />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium">Message</label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell us more about your inquiry..."
+                    className="min-h-[150px] bg-white/5 border-white/10 resize-none"
+                  />
+                </div>
+
+                <Button type="submit" className="w-full h-12 text-base">
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Message
+                </Button>
+              </form>
+            </Card>
           </div>
         </div>
       </div>

@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Target, Award } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Target, Award, Sparkles } from 'lucide-react';
 
 interface GoalSettingProps {
   currentBand: number;
@@ -26,24 +26,24 @@ const GoalSetting = ({ currentBand, targetBand, setTargetBand }: GoalSettingProp
   };
 
   return (
-    <Card>
+    <Card className="glass-card border-white/5">
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center">
-          <Target className="w-5 h-5 mr-2" />
+          <Target className="w-5 h-5 mr-2 text-primary" />
           Goal Setting
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8">
         {/* Current Progress */}
-        <div className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <span className="text-2xl font-bold text-blue-600">{currentBand}</span>
-            <span className="text-gray-400">/</span>
-            <span className="text-2xl font-bold text-green-600">{targetBand}</span>
+        <div className="text-center bg-white/5 rounded-xl p-6 border border-white/5">
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <span className="text-3xl font-bold text-blue-400">{currentBand}</span>
+            <span className="text-muted-foreground text-xl">/</span>
+            <span className="text-3xl font-bold text-emerald-400">{targetBand}</span>
           </div>
-          <Progress value={Math.min(progressPercentage, 100)} className="h-3 mb-2" />
-          <p className="text-sm text-gray-600">
-            {remainingPoints > 0 
+          <Progress value={Math.min(progressPercentage, 100)} className="h-2 mb-3 bg-white/10" />
+          <p className="text-sm text-muted-foreground">
+            {remainingPoints > 0
               ? `${remainingPoints.toFixed(1)} points to reach your goal`
               : 'Goal achieved! 🎉'
             }
@@ -51,9 +51,9 @@ const GoalSetting = ({ currentBand, targetBand, setTargetBand }: GoalSettingProp
         </div>
 
         {/* Target Band Selector */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-4">
               Select Your Target Band
             </label>
             <Slider
@@ -65,33 +65,33 @@ const GoalSetting = ({ currentBand, targetBand, setTargetBand }: GoalSettingProp
               className="w-full"
             />
           </div>
-          
-          <div className="flex justify-between text-xs text-gray-500">
+
+          <div className="flex justify-between text-xs text-muted-foreground px-1">
             <span>5.0</span>
             <span>6.0</span>
             <span>7.0</span>
             <span>8.0</span>
             <span>9.0</span>
           </div>
-          
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <div className="font-medium text-gray-900">Target: Band {targetBand}</div>
-            <div className="text-sm text-gray-600">{getBandDescription(targetBand)}</div>
+
+          <div className="text-center p-4 bg-primary/5 rounded-xl border border-primary/10">
+            <div className="font-medium text-primary mb-1">Target: Band {targetBand}</div>
+            <div className="text-sm text-muted-foreground">{getBandDescription(targetBand)}</div>
           </div>
         </div>
 
         {/* Action Button */}
-        <Button className="w-full" size="lg">
+        <Button className="w-full shadow-lg shadow-primary/20" size="lg">
           <Award className="w-4 h-4 mr-2" />
-          Set Goal
+          Update Goal
         </Button>
 
         {/* Motivational Message */}
         {remainingPoints > 0 && (
-          <Alert variant="default" className="bg-blue-50 border-blue-200 text-blue-800">
-            <AlertDescription>
-              💪 You're {remainingPoints.toFixed(1)} points away from your goal! 
-              Keep practicing and you'll get there.
+          <Alert variant="default" className="bg-blue-500/10 border-blue-500/20 text-blue-400">
+            <Sparkles className="h-4 w-4" />
+            <AlertDescription className="ml-2">
+              You're {remainingPoints.toFixed(1)} points away! Keep practicing.
             </AlertDescription>
           </Alert>
         )}

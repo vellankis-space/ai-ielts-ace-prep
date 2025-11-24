@@ -20,6 +20,9 @@ import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import ComingSoonPage from "./pages/ComingSoonPage";
+import PricingPage from "./pages/PricingPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
 import MockTestPage from "./pages/MockTestPage";
 import DiagnosticTestPage from "./pages/DiagnosticTestPage";
 import AboutUsPage from "./pages/AboutUsPage";
@@ -49,7 +52,7 @@ const App = () => {
               <ScrollToTop />
               <Routes>
                 <Route path="/" element={<Index />} />
-                
+
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />
@@ -81,8 +84,9 @@ const App = () => {
                     <Profile />
                   </ProtectedRoute>
                 } />
-                <Route path="/pricing" element={<ComingSoonPage />} />
-                <Route path="/blog" element={<ComingSoonPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
                 <Route path="/mock-test" element={<MockTestPage />} />
                 <Route path="/diagnostic-test" element={<DiagnosticTestPage />} />
                 <Route path="/login" element={<LoginPage />} />

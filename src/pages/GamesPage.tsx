@@ -1,79 +1,75 @@
-import React, { useState } from 'react';
-import Layout from '../components/Layout';
-import GameCard from '../components/games/GameCard';
-import ParallaxBackground from '../components/games/ParallaxBackground';
+import React from 'react';
+import Layout from '@/components/Layout';
+import GameCard from '@/components/games/GameCard';
 import { motion } from 'framer-motion';
+import { Sparkles, Brain, Ear, PenTool } from 'lucide-react';
 
 const games = [
   {
     title: 'Vocabulary Builder',
     description: 'Expand your lexicon with our engaging vocabulary game. Learn new words and their meanings in a fun and interactive way.',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=800',
+    icon: Brain,
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/20'
   },
   {
     title: 'Grammar Guardian',
     description: 'Test your grammar skills and become a master of sentence structure. Identify and correct grammatical errors to score points.',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800',
+    icon: PenTool,
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/20'
   },
   {
     title: 'Listening Challenge',
     description: 'Sharpen your listening skills with a variety of audio clips and comprehension questions. Prepare for the IELTS listening test.',
-    imageUrl: '/placeholder.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1516280440614-6697288d5d38?auto=format&fit=crop&q=80&w=800',
+    icon: Ear,
+    color: 'text-emerald-400',
+    bgColor: 'bg-emerald-500/10',
+    borderColor: 'border-emerald-500/20'
   },
 ];
 
 const GamesPage: React.FC = () => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
   return (
     <Layout>
-      <ParallaxBackground />
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
-            <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
-              Mini-Games for IELTS Prep
-            </span>
-          </h1>
-          <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-            Sharpen your skills and have fun with our collection of mini-games designed to help you prepare for the IELTS exam.
-          </p>
-        </div>
-        <div
-          className="relative w-full h-[600px] flex items-center justify-center -mt-32"
-          style={{ perspective: '1000px' }}
-        >
-          {games.map((game, index) => {
-            const offset = index - 1;
-            const isHovered = hoveredIndex === index;
-            const isNotHovered = hoveredIndex !== null && !isHovered;
+      <div className="min-h-screen bg-background pt-20 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Hero Section */}
+          <div className="text-center mb-16 relative">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -z-10" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70">
+                Practice Games
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto flex items-center justify-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                Make learning fun with interactive challenges designed to boost your IELTS score.
+              </p>
+            </motion.div>
+          </div>
 
-            return (
+          {/* Games Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {games.map((game, index) => (
               <motion.div
                 key={index}
-                className="absolute"
-                layout
-                onHoverStart={() => setHoveredIndex(index)}
-                onHoverEnd={() => setHoveredIndex(null)}
-                initial={{ opacity: 0, y: 100 }}
-                animate={{
-                  opacity: 1,
-                  y: isHovered ? -20 : Math.abs(offset) * 60,
-                  x: hoveredIndex !== null ? (index - hoveredIndex) * 250 : (index - 1) * 200,
-                  scale: isHovered ? 1.15 : 0.9,
-                  rotateY: isHovered ? 0 : (hoveredIndex !== null ? (index - hoveredIndex) * -25 : (index - 1) * -25),
-                  zIndex: isHovered ? 3 : (offset === 0 ? 2 : 1),
-                }}
-                transition={{ type: 'spring', stiffness: 100, damping: 40 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <GameCard
-                  title={game.title}
-                  description={game.description}
-                  imageUrl={game.imageUrl}
-                />
+                <GameCard {...game} />
               </motion.div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </Layout>

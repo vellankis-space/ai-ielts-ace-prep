@@ -1,38 +1,44 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import Layout from '../components/Layout';
-import Breadcrumb from '../components/Breadcrumb';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Textarea } from '../components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
-import { 
-  Clock, 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  ArrowLeft, 
+import { useParams, useNavigate } from 'react-router-dom';
+import Layout from '@/components/Layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Clock,
+  Play,
+  Pause,
+  RotateCcw,
+  ArrowLeft,
   ArrowRight,
   Volume2,
   Mic,
   MicOff,
   CheckCircle,
   AlertCircle,
-  FileText
+  FileText,
+  Maximize2,
+  Minimize2,
+  MoreVertical
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const TestInterface = () => {
   const { module } = useParams();
   const navigate = useNavigate();
-  
+
   // Timer state
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState<Record<number, string>>({});
-  
+  const [isZenMode, setIsZenMode] = useState(false);
+
   // Audio/Recording state
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -42,8 +48,9 @@ const TestInterface = () => {
   const moduleConfig = {
     listening: {
       name: 'Listening',
-      totalTime: 30 * 60, // 30 minutes in seconds
+      totalTime: 30 * 60,
       totalQuestions: 40,
+      color: 'blue',
       sections: [
         { name: 'Section 1', questions: 10, description: 'Conversation in everyday context' },
         { name: 'Section 2', questions: 10, description: 'Monologue in everyday context' },
@@ -53,8 +60,9 @@ const TestInterface = () => {
     },
     reading: {
       name: 'Reading',
-      totalTime: 60 * 60, // 60 minutes in seconds
+      totalTime: 60 * 60,
       totalQuestions: 40,
+      color: 'emerald',
       sections: [
         { name: 'Passage 1', questions: 13, description: 'Academic text with varied question types' },
         { name: 'Passage 2', questions: 13, description: 'Academic text with varied question types' },
@@ -63,8 +71,9 @@ const TestInterface = () => {
     },
     writing: {
       name: 'Writing',
-      totalTime: 60 * 60, // 60 minutes in seconds
+      totalTime: 60 * 60,
       totalQuestions: 2,
+      color: 'purple',
       sections: [
         { name: 'Task 1', questions: 1, description: 'Describe visual information (20 minutes)' },
         { name: 'Task 2', questions: 1, description: 'Essay writing (40 minutes)' }
@@ -72,8 +81,9 @@ const TestInterface = () => {
     },
     speaking: {
       name: 'Speaking',
-      totalTime: 14 * 60, // 14 minutes in seconds
+      totalTime: 14 * 60,
       totalQuestions: 3,
+      color: 'orange',
       sections: [
         { name: 'Part 1', questions: 1, description: 'Introduction and interview (4-5 minutes)' },
         { name: 'Part 2', questions: 1, description: 'Long turn (3-4 minutes)' },
@@ -100,139 +110,99 @@ const TestInterface = () => {
       }, 1000);
     } else if (timeRemaining === 0 && isActive) {
       setIsActive(false);
-      // Auto-submit test when time is up
     }
     return () => clearInterval(interval);
   }, [isActive, timeRemaining]);
 
-  // Format time display
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
-    if (hours > 0) {
-      return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
+    if (hours > 0) return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Handle answer changes
   const handleAnswerChange = (questionNum: number, value: string) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionNum]: value
-    }));
+    setAnswers(prev => ({ ...prev, [questionNum]: value }));
   };
 
-  // Navigation functions
   const goToNextQuestion = () => {
-    if (currentQuestion < currentModule.totalQuestions) {
-      setCurrentQuestion(currentQuestion + 1);
-    }
+    if (currentQuestion < currentModule.totalQuestions) setCurrentQuestion(currentQuestion + 1);
   };
 
   const goToPrevQuestion = () => {
-    if (currentQuestion > 1) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
+    if (currentQuestion > 1) setCurrentQuestion(currentQuestion - 1);
   };
 
-  // Audio controls (for Listening)
-  const toggleAudio = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  // Recording controls (for Speaking)
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-  };
-
-  // Submit test
+  const toggleAudio = () => setIsPlaying(!isPlaying);
+  const toggleRecording = () => setIsRecording(!isRecording);
   const submitTest = () => {
     setIsActive(false);
     navigate(`/modules/${module}/results`);
   };
 
-  if (!currentModule) {
-    return (
-      <Layout>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Test Not Found</h1>
-            <Link to="/modules">
-              <Button>Back to Modules</Button>
-            </Link>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  if (!currentModule) return <div>Test not found</div>;
 
-  // Render question content based on module type
   const renderQuestionContent = () => {
     switch (module) {
       case 'listening':
         return (
           <div className="space-y-6">
-            {/* Audio Player */}
-            <Card className="bg-blue-50 border-blue-200">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Volume2 className="w-5 h-5 mr-2 text-blue-600" />
-                  Audio Player - Section 1
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-4">
-                  <Button
-                    onClick={toggleAudio}
-                    className={`${isPlaying ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
-                  >
-                    {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    {isPlaying ? 'Pause' : 'Play'}
-                  </Button>
-                  <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${audioProgress}%` }}
-                    ></div>
+            <Card className="glass-card border-white/5 bg-blue-500/5">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                      <Volume2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">Audio Track 1</h3>
+                      <p className="text-xs text-muted-foreground">Section 1</p>
+                    </div>
                   </div>
-                  <span className="text-sm text-gray-600">{formatTime(Math.floor(audioProgress * 3 / 100))}</span>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={toggleAudio}
+                    className="h-10 w-10 rounded-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-400"
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+                  </Button>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  You will hear the audio only once. Take notes as you listen.
-                </p>
+                <div className="relative h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div className="absolute top-0 left-0 h-full bg-blue-500 transition-all duration-300" style={{ width: `${audioProgress}%` }} />
+                </div>
+                <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                  <span>{formatTime(Math.floor(audioProgress * 3 / 100))}</span>
+                  <span>03:00</span>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Question */}
-            <Card>
+            <Card className="glass-card border-white/5">
               <CardHeader>
-                <CardTitle>Question {currentQuestion}</CardTitle>
+                <CardTitle className="text-lg">Question {currentQuestion}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="mb-4">What is the speaker's main concern about the accommodation?</p>
-                <RadioGroup 
-                  value={answers[currentQuestion] || ''} 
+                <p className="mb-6 text-lg">What is the speaker's main concern about the accommodation?</p>
+                <RadioGroup
+                  value={answers[currentQuestion] || ''}
                   onValueChange={(value) => handleAnswerChange(currentQuestion, value)}
+                  className="space-y-3"
                 >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="A" id="A" />
-                    <label htmlFor="A" className="cursor-pointer">A) The location is too far from the city center</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="B" id="B" />
-                    <label htmlFor="B" className="cursor-pointer">B) The rent is higher than expected</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="C" id="C" />
-                    <label htmlFor="C" className="cursor-pointer">C) The facilities are not adequate</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="D" id="D" />
-                    <label htmlFor="D" className="cursor-pointer">D) The contract terms are unclear</label>
-                  </div>
+                  {['The location is too far from the city center', 'The rent is higher than expected', 'The facilities are not adequate', 'The contract terms are unclear'].map((option, idx) => (
+                    <div key={idx} className={cn(
+                      "flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer",
+                      answers[currentQuestion] === String.fromCharCode(65 + idx)
+                        ? "bg-primary/10 border-primary/50"
+                        : "bg-white/5 border-white/5 hover:bg-white/10"
+                    )}>
+                      <RadioGroupItem value={String.fromCharCode(65 + idx)} id={String.fromCharCode(65 + idx)} />
+                      <label htmlFor={String.fromCharCode(65 + idx)} className="flex-1 cursor-pointer font-medium">
+                        {String.fromCharCode(65 + idx)}) {option}
+                      </label>
+                    </div>
+                  ))}
                 </RadioGroup>
               </CardContent>
             </Card>
@@ -241,56 +211,49 @@ const TestInterface = () => {
 
       case 'reading':
         return (
-          <div className="space-y-6">
-            {/* Reading Passage */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Passage 1: The Impact of Urbanization</CardTitle>
+          <div className="grid lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
+            <Card className="glass-card border-white/5 h-full flex flex-col">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center justify-between">
+                  <span>Passage 1: The Impact of Urbanization</span>
+                  <Button variant="ghost" size="icon"><Maximize2 className="w-4 h-4" /></Button>
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="prose max-w-none text-sm leading-relaxed">
-                  <p>
-                    Urbanization, the process by which rural areas become urbanized as a result of economic development and industrialization, has been one of the most significant demographic trends of the modern era. As cities continue to grow and expand, they bring both opportunities and challenges that affect millions of people worldwide.
-                  </p>
-                  <p>
-                    The rapid pace of urban growth has led to the development of megacities—urban areas with populations exceeding 10 million people. These massive population centers serve as economic hubs, driving innovation and providing employment opportunities for diverse populations. However, this concentration of people also creates substantial challenges in terms of infrastructure, housing, and environmental sustainability.
-                  </p>
-                  <p>
-                    One of the most pressing issues facing modern cities is the provision of adequate housing. As urban populations grow, the demand for affordable housing often outstrips supply, leading to the development of informal settlements and increasing homelessness. City planners and policymakers must balance the need for economic growth with the requirement to provide basic services and quality of life for all residents.
-                  </p>
-                </div>
+              <CardContent className="flex-1 overflow-hidden p-0">
+                <ScrollArea className="h-full p-6">
+                  <div className="prose prose-invert max-w-none text-base leading-relaxed">
+                    <p>Urbanization, the process by which rural areas become urbanized as a result of economic development and industrialization, has been one of the most significant demographic trends of the modern era. As cities continue to grow and expand, they bring both opportunities and challenges that affect millions of people worldwide.</p>
+                    <p>The rapid pace of urban growth has led to the development of megacities—urban areas with populations exceeding 10 million people. These massive population centers serve as economic hubs, driving innovation and providing employment opportunities for diverse populations. However, this concentration of people also creates substantial challenges in terms of infrastructure, housing, and environmental sustainability.</p>
+                    <p>One of the most pressing issues facing modern cities is the provision of adequate housing. As urban populations grow, the demand for affordable housing often outstrips supply, leading to the development of informal settlements and increasing homelessness. City planners and policymakers must balance the need for economic growth with the requirement to provide basic services and quality of life for all residents.</p>
+                  </div>
+                </ScrollArea>
               </CardContent>
             </Card>
 
-            {/* Question */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Question {currentQuestion}</CardTitle>
+            <Card className="glass-card border-white/5 h-full flex flex-col">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Question {currentQuestion}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="mb-4">
-                  According to the passage, urbanization is primarily caused by:
-                </p>
-                <RadioGroup 
-                  value={answers[currentQuestion] || ''} 
+              <CardContent className="flex-1 overflow-y-auto p-6">
+                <p className="mb-6 text-lg font-medium">According to the passage, urbanization is primarily caused by:</p>
+                <RadioGroup
+                  value={answers[currentQuestion] || ''}
                   onValueChange={(value) => handleAnswerChange(currentQuestion, value)}
+                  className="space-y-3"
                 >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="A" id="A" />
-                    <label htmlFor="A" className="cursor-pointer">A) Population growth in rural areas</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="B" id="B" />
-                    <label htmlFor="B" className="cursor-pointer">B) Economic development and industrialization</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="C" id="C" />
-                    <label htmlFor="C" className="cursor-pointer">C) Government policies promoting city life</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="D" id="D" />
-                    <label htmlFor="D" className="cursor-pointer">D) Environmental factors affecting rural areas</label>
-                  </div>
+                  {['Population growth in rural areas', 'Economic development and industrialization', 'Government policies promoting city life', 'Environmental factors affecting rural areas'].map((option, idx) => (
+                    <div key={idx} className={cn(
+                      "flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer",
+                      answers[currentQuestion] === String.fromCharCode(65 + idx)
+                        ? "bg-primary/10 border-primary/50"
+                        : "bg-white/5 border-white/5 hover:bg-white/10"
+                    )}>
+                      <RadioGroupItem value={String.fromCharCode(65 + idx)} id={String.fromCharCode(65 + idx)} />
+                      <label htmlFor={String.fromCharCode(65 + idx)} className="flex-1 cursor-pointer font-medium">
+                        {String.fromCharCode(65 + idx)}) {option}
+                      </label>
+                    </div>
+                  ))}
                 </RadioGroup>
               </CardContent>
             </Card>
@@ -299,58 +262,49 @@ const TestInterface = () => {
 
       case 'writing':
         return (
-          <div className="space-y-6">
-            <Card>
+          <div className="grid lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
+            <Card className="glass-card border-white/5 h-full flex flex-col">
               <CardHeader>
-                <CardTitle>Task {currentQuestion}: {currentQuestion === 1 ? 'Academic Writing Task 1' : 'Academic Writing Task 2'}</CardTitle>
+                <CardTitle className="text-lg">Task {currentQuestion}</CardTitle>
               </CardHeader>
-              <CardContent>
-                {currentQuestion === 1 ? (
-                  <div>
-                    <p className="mb-4">
-                      You should spend about 20 minutes on this task.
-                    </p>
-                    <p className="mb-4">
-                      The chart below shows the percentage of households in owned and rented accommodation in England and Wales between 1918 and 2011.
-                    </p>
-                    <div className="bg-gray-100 rounded-lg p-8 mb-4 text-center">
-                      <p className="text-gray-600">[Chart would be displayed here]</p>
-                      <p className="text-sm text-gray-500 mt-2">Bar chart showing housing tenure data</p>
+              <CardContent className="flex-1 overflow-y-auto">
+                <div className="bg-white/5 rounded-xl p-6 mb-6">
+                  <p className="font-medium mb-4 text-muted-foreground">
+                    {currentQuestion === 1 ? 'You should spend about 20 minutes on this task.' : 'You should spend about 40 minutes on this task.'}
+                  </p>
+                  <p className="text-lg mb-4">
+                    {currentQuestion === 1
+                      ? 'The chart below shows the percentage of households in owned and rented accommodation in England and Wales between 1918 and 2011.'
+                      : 'Some people think that all university students should study whatever they like. Others believe that they should only be allowed to study subjects that will be useful in the future.'}
+                  </p>
+                  {currentQuestion === 1 && (
+                    <div className="bg-white/5 rounded-lg h-48 flex items-center justify-center border border-white/10 mb-4">
+                      <span className="text-muted-foreground">[Chart Placeholder]</span>
                     </div>
-                    <p className="mb-4">
-                      Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
-                    </p>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Write at least 150 words.
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="mb-4">
-                      You should spend about 40 minutes on this task.
-                    </p>
-                    <p className="mb-4">
-                      Some people think that all university students should study whatever they like. Others believe that they should only be allowed to study subjects that will be useful in the future, such as those related to science and technology.
-                    </p>
-                    <p className="mb-4">
-                      Discuss both these views and give your own opinion.
-                    </p>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Give reasons for your answer and include any relevant examples from your own knowledge or experience. Write at least 250 words.
-                    </p>
-                  </div>
-                )}
-                
-                <Textarea 
-                  placeholder="Type your answer here..."
+                  )}
+                  <p className="text-sm text-muted-foreground">
+                    {currentQuestion === 1
+                      ? 'Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+                      : 'Discuss both these views and give your own opinion.'}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glass-card border-white/5 h-full flex flex-col">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                <CardTitle className="text-lg">Your Response</CardTitle>
+                <div className="text-xs text-muted-foreground">
+                  {(answers[currentQuestion] || '').split(' ').filter(w => w.length > 0).length} words
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 p-0">
+                <Textarea
+                  placeholder="Start typing your answer here..."
                   value={answers[currentQuestion] || ''}
                   onChange={(e) => handleAnswerChange(currentQuestion, e.target.value)}
-                  className="min-h-[300px] font-mono text-sm"
+                  className="h-full resize-none border-0 bg-transparent p-6 focus-visible:ring-0 text-base leading-relaxed"
                 />
-                <div className="flex justify-between items-center mt-2 text-sm text-gray-600">
-                  <span>Word count: {(answers[currentQuestion] || '').split(' ').filter(word => word.length > 0).length}</span>
-                  <span>Minimum: {currentQuestion === 1 ? '150' : '250'} words</span>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -358,244 +312,149 @@ const TestInterface = () => {
 
       case 'speaking':
         return (
-          <div className="space-y-6">
-            {/* Recording Interface */}
-            <Card className="bg-orange-50 border-orange-200">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Mic className="w-5 h-5 mr-2 text-orange-600" />
-                  Speaking Test - Part {currentQuestion}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-4 mb-4">
-                  <Button
-                    onClick={toggleRecording}
-                    className={`${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-orange-600 hover:bg-orange-700'}`}
-                  >
-                    {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    {isRecording ? 'Stop Recording' : 'Start Recording'}
-                  </Button>
+          <div className="max-w-2xl mx-auto space-y-8 py-12">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 rounded-full bg-orange-500/10 flex items-center justify-center mx-auto animate-pulse">
+                <Mic className="w-10 h-10 text-orange-500" />
+              </div>
+              <h2 className="text-2xl font-bold">Part {currentQuestion}: {currentQuestion === 1 ? 'Introduction' : currentQuestion === 2 ? 'Long Turn' : 'Discussion'}</h2>
+              <p className="text-muted-foreground">
+                {currentQuestion === 1 && "Answer questions about yourself and familiar topics"}
+                {currentQuestion === 2 && "Speak for 1-2 minutes on the given topic"}
+                {currentQuestion === 3 && "Discuss abstract topics related to Part 2"}
+              </p>
+            </div>
+
+            <Card className="glass-card border-white/5 bg-orange-500/5">
+              <CardContent className="p-8 flex flex-col items-center">
+                <div className="w-full bg-white/5 rounded-full h-16 flex items-center justify-center mb-8 relative overflow-hidden">
                   {isRecording && (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm text-red-600 font-medium">Recording...</span>
-                    </div>
+                    <div className="absolute inset-0 bg-orange-500/10 animate-pulse" />
                   )}
+                  <div className="flex gap-1 items-end h-8">
+                    {[...Array(12)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-1 bg-orange-500 rounded-full transition-all duration-100"
+                        style={{ height: isRecording ? `${Math.random() * 100}%` : '20%' }}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <p className="text-sm text-gray-600">
-                  {currentQuestion === 1 && "Answer questions about yourself and familiar topics"}
-                  {currentQuestion === 2 && "Speak for 1-2 minutes on the given topic"}
-                  {currentQuestion === 3 && "Discuss abstract topics related to Part 2"}
-                </p>
+
+                <Button
+                  size="lg"
+                  onClick={toggleRecording}
+                  className={cn(
+                    "h-16 px-8 rounded-full text-lg font-medium transition-all shadow-lg",
+                    isRecording
+                      ? "bg-red-500 hover:bg-red-600 shadow-red-500/20"
+                      : "bg-orange-500 hover:bg-orange-600 shadow-orange-500/20"
+                  )}
+                >
+                  {isRecording ? (
+                    <>
+                      <MicOff className="w-5 h-5 mr-2" />
+                      Stop Recording
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="w-5 h-5 mr-2" />
+                      Start Recording
+                    </>
+                  )}
+                </Button>
               </CardContent>
             </Card>
 
-            {/* Question */}
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {currentQuestion === 1 && "Part 1: Introduction & Interview"}
-                  {currentQuestion === 2 && "Part 2: Long Turn"}
-                  {currentQuestion === 3 && "Part 3: Discussion"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {currentQuestion === 1 && (
-                  <div>
-                    <p className="mb-4">The examiner will ask you questions about yourself. Answer naturally and provide some detail.</p>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="font-medium mb-2">Sample Questions:</p>
-                      <ul className="space-y-1 text-sm">
-                        <li>• What's your name?</li>
-                        <li>• Where are you from?</li>
-                        <li>• Do you work or study?</li>
-                        <li>• Tell me about your hometown.</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-                
-                {currentQuestion === 2 && (
-                  <div>
-                    <p className="mb-4">You have 1 minute to prepare. You can make notes. Then speak for 1-2 minutes.</p>
-                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                      <p className="font-medium mb-2">Topic:</p>
-                      <p className="mb-3">Describe a memorable journey you have taken.</p>
-                      <p className="text-sm mb-2">You should say:</p>
-                      <ul className="space-y-1 text-sm">
-                        <li>• where you went</li>
-                        <li>• how you traveled</li>
-                        <li>• who you went with</li>
-                        <li>• and explain why this journey was memorable</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-                
-                {currentQuestion === 3 && (
-                  <div>
-                    <p className="mb-4">The examiner will ask you more abstract questions related to the Part 2 topic.</p>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="font-medium mb-2">Discussion Topics:</p>
-                      <ul className="space-y-1 text-sm">
-                        <li>• How has travel changed in your country?</li>
-                        <li>• What are the benefits of traveling?</li>
-                        <li>• Do you think people travel too much nowadays?</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
+            <Card className="glass-card border-white/5">
+              <CardContent className="p-6">
+                <h3 className="font-medium mb-4 text-muted-foreground">Topic Card</h3>
+                <div className="bg-white/5 rounded-xl p-6">
+                  <p className="text-lg font-medium mb-4">Describe a memorable journey you have taken.</p>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li>• where you went</li>
+                    <li>• how you traveled</li>
+                    <li>• who you went with</li>
+                    <li>• and explain why this journey was memorable</li>
+                  </ul>
+                </div>
               </CardContent>
             </Card>
           </div>
         );
-
-      default:
-        return <div>Module not found</div>;
     }
   };
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[
-          { label: 'Modules', path: '/modules' },
-          { label: currentModule.name, path: `/modules/${module}` },
-          { label: 'Test' }
-        ]} />
-
-        {/* Header with Timer */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {currentModule.name} Test
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Question {currentQuestion} of {currentModule.totalQuestions}
-            </p>
-          </div>
-          
-          {/* Timer */}
-          <Card className="mt-4 lg:mt-0">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-3">
-                <Clock className="w-5 h-5 text-blue-600" />
-                <div>
-                  <p className="text-sm text-gray-600">Time Remaining</p>
-                  <p className={`text-lg font-bold ${timeRemaining < 300 ? 'text-red-600' : 'text-blue-600'}`}>
-                    {formatTime(timeRemaining)}
-                  </p>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsActive(!isActive)}
-                >
-                  {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {renderQuestionContent()}
-            
-            {/* Navigation */}
-            <div className="flex justify-between items-center mt-8">
-              <Button
-                variant="outline"
-                onClick={goToPrevQuestion}
-                disabled={currentQuestion === 1}
-                className="flex items-center"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Previous
+      <div className={cn("min-h-screen bg-background flex flex-col", isZenMode ? "fixed inset-0 z-50" : "pt-20 pb-20")}>
+        {/* Test Header */}
+        <div className="border-b border-white/5 bg-background/50 backdrop-blur-xl sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/modules')}>
+                <ArrowLeft className="w-5 h-5" />
               </Button>
-              
-              <div className="flex space-x-3">
-                {currentQuestion < currentModule.totalQuestions ? (
-                  <Button onClick={goToNextQuestion} className="flex items-center">
-                    Next
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                ) : (
-                  <Button onClick={submitTest} className="bg-green-600 hover:bg-green-700">
-                    Submit Test
-                    <CheckCircle className="w-4 h-4 ml-2" />
-                  </Button>
-                )}
+              <div>
+                <h1 className="font-bold text-lg">{currentModule.name} Test</h1>
+                <div className="flex items-center text-xs text-muted-foreground space-x-2">
+                  <span>Question {currentQuestion} of {currentModule.totalQuestions}</span>
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  <span>{currentModule.sections[0].name}</span>
+                </div>
               </div>
             </div>
+
+            <div className="flex items-center space-x-4">
+              <div className={cn(
+                "flex items-center space-x-2 px-3 py-1.5 rounded-full border",
+                timeRemaining < 300 ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-white/5 border-white/10"
+              )}>
+                <Clock className="w-4 h-4" />
+                <span className="font-mono font-medium">{formatTime(timeRemaining)}</span>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setIsZenMode(!isZenMode)}>
+                {isZenMode ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+              </Button>
+              <Button onClick={submitTest} size="sm" className="bg-primary hover:bg-primary/90">
+                Submit
+              </Button>
+            </div>
           </div>
+          <Progress value={(currentQuestion / currentModule.totalQuestions) * 100} className="h-0.5 rounded-none bg-transparent" />
+        </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-8">
-              <CardHeader>
-                <CardTitle className="text-lg">Test Progress</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Progress Bar */}
-                <div>
-                  <div className="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>Progress</span>
-                    <span>{Math.round((currentQuestion / currentModule.totalQuestions) * 100)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${(currentQuestion / currentModule.totalQuestions) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
+        {/* Main Content */}
+        <div className="flex-1 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 h-full py-6">
+            {renderQuestionContent()}
+          </div>
+        </div>
 
-                {/* Sections */}
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Sections</h4>
-                  <div className="space-y-2">
-                    {currentModule.sections.map((section, index) => (
-                      <div key={index} className="text-sm">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">{section.name}</span>
-                          <span className="text-gray-500">{section.questions}Q</span>
-                        </div>
-                        <p className="text-gray-600 text-xs">{section.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className="pt-4 border-t border-gray-200">
-                  <div className="space-y-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <FileText className="w-4 h-4 mr-2" />
-                      Review Answers
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <RotateCcw className="w-4 h-4 mr-2" />
-                      Reset Section
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Warning */}
-                {timeRemaining < 300 && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <div className="flex items-center">
-                      <AlertCircle className="w-4 h-4 text-red-600 mr-2" />
-                      <span className="text-red-800 text-sm font-medium">
-                        Less than 5 minutes remaining!
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+        {/* Footer Navigation */}
+        <div className="border-t border-white/5 bg-background/50 backdrop-blur-xl p-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <Button variant="outline" onClick={goToPrevQuestion} disabled={currentQuestion === 1}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Previous
+            </Button>
+            <div className="flex space-x-2">
+              {[...Array(Math.min(10, currentModule.totalQuestions))].map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all",
+                    i + 1 === currentQuestion ? "bg-primary scale-125" :
+                      i + 1 < currentQuestion ? "bg-primary/50" : "bg-white/10"
+                  )}
+                />
+              ))}
+            </div>
+            <Button onClick={goToNextQuestion} disabled={currentQuestion === currentModule.totalQuestions}>
+              Next
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </div>
         </div>
       </div>
